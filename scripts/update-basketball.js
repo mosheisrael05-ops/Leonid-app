@@ -1,12 +1,13 @@
 import fs from "fs";
 import path from "path";
 
-const API_KEY = process.env.BASKETBALL_API_KEY;
+const API_KEY = process.env.APISPORTS_KEY;
 const OUT_PATH = path.join(process.cwd(), "data", "bnei-herzliya.json");
-
-// בני הרצליה: team ID=497, ליגה ישראלית: league=120, עונה=2025-2026
-const TEAM_ID = 497;
-const LEAGUE_ID = 120;
+// בני הרצליה (API-Sports): team ID=1566
+// ליגה ישראלית (API-Sports): Super League = 51
+// עונה: 2025-2026
+const TEAM_ID = 1566;
+const LEAGUE_ID = 51;
 const SEASON = "2025-2026";
 
 const HEADERS = {
