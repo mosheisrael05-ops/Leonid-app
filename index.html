@@ -349,13 +349,23 @@
         };
         
         const workSchedule = {
+            // פברואר 2026
             '2026-02-01': 'מטי', '2026-02-02': 'נתנאל', '2026-02-03': 'גומן', '2026-02-04': 'משה',
             '2026-02-05': 'סטס', '2026-02-06': 'גומן', '2026-02-07': 'משה', '2026-02-08': 'מטי',
             '2026-02-09': 'גומן', '2026-02-10': 'משה', '2026-02-11': 'נתנאל', '2026-02-12': 'סטס',
             '2026-02-13': 'משה', '2026-02-14': 'נתנאל', '2026-02-15': 'מטי', '2026-02-16': 'סטס',
             '2026-02-17': 'משה', '2026-02-18': 'גומן', '2026-02-19': 'נתנאל', '2026-02-20': 'משה',
             '2026-02-21': 'גומן', '2026-02-22': 'מטי', '2026-02-23': 'נתנאל', '2026-02-24': 'משה',
-            '2026-02-25': 'גומן', '2026-02-26': 'סטס', '2026-02-27': 'נתנאל', '2026-02-28': 'גומן'
+            '2026-02-25': 'גומן', '2026-02-26': 'סטס', '2026-02-27': 'נתנאל', '2026-02-28': 'גומן',
+            // מרץ 2026 - *** עדכן לפי לוח העבודה האמיתי ***
+            '2026-03-01': 'משה', '2026-03-02': 'מטי', '2026-03-03': 'סטס', '2026-03-04': 'נתנאל',
+            '2026-03-05': 'גומן', '2026-03-06': 'משה', '2026-03-07': 'מטי', '2026-03-08': 'סטס',
+            '2026-03-09': 'נתנאל', '2026-03-10': 'גומן', '2026-03-11': 'משה', '2026-03-12': 'מטי',
+            '2026-03-13': 'סטס', '2026-03-14': 'נתנאל', '2026-03-15': 'גומן', '2026-03-16': 'משה',
+            '2026-03-17': 'מטי', '2026-03-18': 'סטס', '2026-03-19': 'נתנאל', '2026-03-20': 'גומן',
+            '2026-03-21': 'משה', '2026-03-22': 'מטי', '2026-03-23': 'סטס', '2026-03-24': 'נתנאל',
+            '2026-03-25': 'גומן', '2026-03-26': 'משה', '2026-03-27': 'מטי', '2026-03-28': 'סטס',
+            '2026-03-29': 'נתנאל', '2026-03-30': 'גומן', '2026-03-31': 'משה'
         };
         
         // תרגום שמות עובדים לרוסית
@@ -367,7 +377,7 @@
             'סטס': 'Стас'
         };
         
-        // הגייה נכונה בעברית (למנוע הגייה שגויה)
+        // הגייה נכונה בעברית
         const workerPronounce = {
             'נתנאל': 'נתנאייל'
         };
@@ -385,73 +395,21 @@
         const hebrewMonths = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
         const russianMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
         
-        // משתנה גלובלי לשמירת נתוני בני הרצליה
-        let basketballData = {
-            position: 'טוען...',
-            positionRu: 'Загрузка...',
-            lastGame: 'טוען...',
-            lastGameRu: 'Загрузка...',
-            nextGame: 'טוען...',
-            nextGameRu: 'Загрузка...'
+        // ===== נתוני בני הרצליה - עדכון ידני =====
+        // עודכן לאחרונה: 24.02.2026
+        const basketballData = {
+            position: 'מקום 3 | מאזן 13-4',
+            positionRu: 'Место 3 | Баланс 13-4',
+            lastGame: 'ניצחון 105:89 נגד גליל עליון (22.02.26) - ניצחון שמיני רצוף!',
+            lastGameRu: 'Победа 105:89 против Галиль Эльон (22.02.26) - Восьмая победа подряд!',
+            nextGame: 'נגד גליל עליון (08.03.26) - אחרי פגרת נבחרות',
+            nextGameRu: 'против Галиль Эльон (08.03.26) - после паузы сборных'
         };
         
-        // נתוני בני הרצליה - fallback מיידי + ניסיון אוטומטי
-        async function loadBasketballData() {
-            // קודם טוען fallback מיידי - כדי שתמיד יהיה מידע
-            loadBasketballFallback();
-            
-            try {
-                const response = await fetch('/.netlify/functions/get-basketball');
-                if (!response.ok) throw new Error('Function returned ' + response.status);
-                const data = await response.json();
-                
-                // רק מחליף אם באמת קיבלנו מידע טוב (לא "טוען..." ולא ריק)
-                if (data.position && data.position !== 'טוען...' && data.position !== '...') {
-                    basketballData.position = data.position;
-                    basketballData.positionRu = data.positionRu || 'Место ' + data.position;
-                }
-                if (data.lastGame && data.lastGame.result && data.lastGame.result !== 'טוען...' && data.lastGame.result !== '...') {
-                    basketballData.lastGame = data.lastGame.result;
-                    basketballData.lastGameRu = data.lastGameRu || data.lastGame.result;
-                }
-                if (data.nextGame && data.nextGame.opponent && data.nextGame.opponent !== 'טוען...') {
-                    basketballData.nextGame = data.nextGame.opponent;
-                    basketballData.nextGameRu = data.nextGameRu || data.nextGame.opponent;
-                }
-                
-                console.log('🏀 Basketball updated from Netlify Function');
-            } catch (error) {
-                console.log('ℹ️ Using fallback basketball data:', error.message);
-            }
-            
-            // עדכון התצוגה
+        function loadBasketballDisplay() {
             document.getElementById('tablePosition').textContent = basketballData.position;
             document.getElementById('lastResult').textContent = basketballData.lastGame;
             document.getElementById('nextGame').textContent = basketballData.nextGame;
-        }
-        
-        // ===== FALLBACK - עדכן ידנית כשהפונקציה לא עובדת =====
-        function loadBasketballFallback() {
-            const today = new Date();
-            const cupGameUntil = new Date('2026-02-17');
-            
-            let nextGameText, nextGameRu;
-            if (today < cupGameUntil) {
-                nextGameText = 'נגד הפועל העמק | 16.02.26 | 19:00 | 5PLUS | חצי גמר גביע המדינה';
-                nextGameRu = 'против Апоэль Эмек | 16.02.26 | 19:00 | 5PLUS | Полуфинал Кубка';
-            } else {
-                nextGameText = 'נגד הפועל גליל עליון (22.02.26)';
-                nextGameRu = 'против Апоэль Галиль Эльон (22.02.26)';
-            }
-            
-            basketballData = {
-                position: 'מקום 4',
-                positionRu: 'Место 4',
-                lastGame: 'ניצחון 87:76 (07.02.26) - ניצחון שביעי רצוף!',
-                lastGameRu: 'Победа 87:76 (07.02.26) - Седьмая победа подряд!',
-                nextGame: nextGameText,
-                nextGameRu: nextGameRu
-            };
         }
         
         function formatDate(date) {
@@ -590,19 +548,16 @@
         }
         
         // טעינה ראשונית
-        console.log('🚀 מתחיל לטעון את האפליקציה...');
-        loadBasketballData();
+        loadBasketballDisplay();
         updateDisplay();
         
         // הפעלה אוטומטית של הקראייה
         window.addEventListener('load', () => {
-            console.log('📢 מתכונן לדבר...');
             setTimeout(() => speakAll(), 1000);
         });
         
-        // כפתור ידני להפעלת הקראייה
+        // כפתור ידני
         document.getElementById('speakButton').addEventListener('click', () => {
-            console.log('🔊 לחיצה על כפתור הקראייה');
             isSpeaking = false;
             speechSynthesis.cancel();
             speakAll();
@@ -610,9 +565,6 @@
         
         // עדכון אוטומטי כל דקה
         setInterval(updateDisplay, 60000);
-        
-        // עדכון נתוני כדורסל כל 30 דקות
-        setInterval(loadBasketballData, 30 * 60 * 1000);
     </script>
 </body>
 </html>
