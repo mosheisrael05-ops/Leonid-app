@@ -1,22 +1,6 @@
- {
-  "updatedAt": "2026-02-24T00:30:00.000Z",
-  "position": 4,
-  "winStreak": 8,
-  "lastGame": {
-    "date": "22.2.2026",
-    "opponent": "הפועל גליל עליון",
-    "myScore": 105,
-    "oppScore": 89,
-    "won": true,
-    "result": "ניצחון 105:89 נגד הפועל גליל עליון (22.2.2026)",
-    "resultRu": "Победа 105:89 против Хапоэль Галиль Элион (22.02.2026)"
-  },
-  "nextGame": {
-    "date": "8.3.2026",
-    "time": "TBD",
-    "opponent": "הפועל ירושלים",
-    "isHome": false,
-    "text": "נגד הפועל ירושלים | 8.3.2026 | חוץ",
-    "textRu": "против Хапоэль Иерусалим | 08.03.2026 | выезд"
-  }
+{
+  "updatedAt": "2026-02-25T05:40:14.349Z",
+  "position": null,
+  "lastGame": null,
+  "nextGame": null
 }
