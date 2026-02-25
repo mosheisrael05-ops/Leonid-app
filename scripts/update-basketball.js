@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-const API_KEY = process.env.APISPORTS_KEY;
+const API_KEY = process.env.BASKETBALL_API_KEY;
 const OUT_PATH = path.join(process.cwd(), "data", "bnei-herzliya.json");
 // בני הרצליה (API-Sports): team ID=1566
 // ליגה ישראלית (API-Sports): Super League = 51
