@@ -153,7 +153,7 @@
         };
 
         const workerNamesRu = { 'מטי': 'Мати', 'נתנאל': 'Натаниэль', 'גומן': 'Гуман', 'משה': 'Моше', 'סטס': 'Стас' };
-        const workerPronounce = { 'נתנאל': 'נתנאייל' };
+        const workerPronounce = { 'נתנאל': 'נתנאייל', 'מטי': 'מאטי' };
         function getWorkerRu(name) { return workerNamesRu[name] || name; }
         function getWorkerSpeak(name) { return workerPronounce[name] || name; }
 
@@ -163,12 +163,12 @@
         const russianMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
         let basketballData = {
-            position: 'מקום 4 | מאזן 13-4 (17 משחקים)',
-            positionRu: 'Место 4 | Баланс 13-4 (17 игр)',
-            lastGame: 'הפסד 96:107 נגד מכבי רעננה (מחזור 8 סיבוב שני)',
-            lastGameRu: 'Поражение 96:107 от Маккаби Раанана',
-            nextGame: 'נגד הפועל ירושלים | 18.04.26 | 20:15',
-            nextGameRu: 'против Апоэль Иерусалим | 18.04.26 | 20:15'
+            position: 'פלייאוף בית עליון (טופ 8)',
+            positionRu: 'Плей-офф — верхняя группа (топ 8)',
+            lastGame: 'הפסד 81:102 להפועל ירושלים (בית עליון — 18.04.26)',
+            lastGameRu: 'Поражение 81:102 от Апоэль Иерусалим (верхняя группа — 18.04.26)',
+            nextGame: 'נגד עירוני נס ציונה | בית עליון | 26.04.26 | 19:30',
+            nextGameRu: 'против Ирони Нес-Циона | верхняя группа | 26.04.26 | 19:30'
         };
 
         async function loadBasketballData() {
