@@ -1,4 +1,4 @@
-name: Update Basketball Data
+ name: Update Basketball Data
 
 on:
   schedule:
