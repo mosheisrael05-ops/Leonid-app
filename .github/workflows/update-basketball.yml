@@ -11,7 +11,6 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -20,8 +19,8 @@ jobs:
           node-version: 20
 
       - name: Run updater
-     env:
-  BASKETBALL_API_KEY: ${{ secrets.BASKETBALL_API_KEY }}
+        env:
+          BASKETBALL_API_KEY: ${{ secrets.BASKETBALL_API_KEY }}
         run: node scripts/update-basketball.js
 
       - name: Commit if changed
