@@ -1,28 +1,22 @@
  name: Update Basketball Data
-
 on:
   schedule:
     - cron: "0 4 * * *"
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Run updater
         env:
           BASKETBALL_API_KEY: ${{ secrets.BASKETBALL_API_KEY }}
         run: node scripts/update-basketball.js
-
       - name: Commit if changed
         run: |
           git config user.name "github-actions"
