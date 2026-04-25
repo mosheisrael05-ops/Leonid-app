@@ -173,28 +173,57 @@
 
         async function loadBasketballData() {
             try {
-                const res = await fetch('data/bnei-herzliya.json?t=' + Date.now());
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.position) {
-                        basketballData.position = `מקום ${data.position}`;
-                        basketballData.positionRu = `Место ${data.position}`;
-                    }
-                    if (data.lastGame) {
-                        basketballData.lastGame = data.lastGame.result || basketballData.lastGame;
-                        basketballData.lastGameRu = data.lastGame.resultRu || basketballData.lastGameRu;
-                    }
-                    if (data.nextGame) {
-                        basketballData.nextGame = data.nextGame.text || basketballData.nextGame;
-                        basketballData.nextGameRu = data.nextGame.textRu || basketballData.nextGameRu;
-                    }
+                // שלב 1: מציאת מזהה הקבוצה
+                const teamRes = await fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=Bnei+Herzliya');
+                const teamData = await teamRes.json();
+                const team = teamData.teams?.[0];
+                if (!team) throw new Error('Team not found');
+                const teamId = team.idTeam;
+
+                // שלב 2: משחק אחרון
+                const lastRes = await fetch(`https://www.thesportsdb.com/api/v1/json/3/eventslast.php?id=${teamId}`);
+                const lastData = await lastRes.json();
+                const lastEvent = lastData.results?.[lastData.results.length - 1];
+
+                if (lastEvent) {
+                    const herzHome = lastEvent.strHomeTeam.toLowerCase().includes('herzliya');
+                    const herzScore = herzHome ? lastEvent.intHomeScore : lastEvent.intAwayScore;
+                    const oppScore  = herzHome ? lastEvent.intAwayScore : lastEvent.intHomeScore;
+                    const opponent  = herzHome ? lastEvent.strAwayTeam : lastEvent.strHomeTeam;
+                    const won = parseInt(herzScore) > parseInt(oppScore);
+                    const resultHe = won ? 'ניצחון' : 'הפסד';
+                    const resultRu = won ? 'Победа' : 'Поражение';
+                    const dateStr  = lastEvent.dateEvent || '';
+                    const dateFmt  = dateStr ? dateStr.split('-').reverse().join('.') : '';
+                    basketballData.lastGame   = `${resultHe} ${herzScore}:${oppScore} נגד ${opponent}${dateFmt ? ' (' + dateFmt + ')' : ''}`;
+                    basketballData.lastGameRu = `${resultRu} ${herzScore}:${oppScore} против ${opponent}${dateFmt ? ' (' + dateFmt + ')' : ''}`;
                 }
+
+                // שלב 3: משחק הבא
+                const nextRes = await fetch(`https://www.thesportsdb.com/api/v1/json/3/eventsnext.php?id=${teamId}`);
+                const nextData = await nextRes.json();
+                const nextEvent = nextData.events?.[0];
+
+                if (nextEvent) {
+                    const herzHome  = nextEvent.strHomeTeam.toLowerCase().includes('herzliya');
+                    const opponent  = herzHome ? nextEvent.strAwayTeam : nextEvent.strHomeTeam;
+                    const dateStr   = nextEvent.dateEvent || '';
+                    const dateFmt   = dateStr ? dateStr.split('-').reverse().join('.') : '';
+                    const timeStr   = nextEvent.strTime ? nextEvent.strTime.slice(0,5) : '';
+                    const homeAway  = herzHome ? 'בבית' : 'בחוץ';
+                    basketballData.nextGame   = `נגד ${opponent} | ${dateFmt}${timeStr ? ' | ' + timeStr : ''} | ${homeAway}`;
+                    basketballData.nextGameRu = `против ${opponent} | ${dateFmt}${timeStr ? ' | ' + timeStr : ''}`;
+                }
+
+                console.log('נתוני כדורסל נטענו בהצלחה מ-TheSportsDB ✅');
+
             } catch (e) {
-                console.log('משתמש בנתוני ברירת מחדל');
+                console.log('TheSportsDB לא זמין — משתמש בנתונים קבועים:', e.message);
             }
+
             document.getElementById('tablePosition').textContent = basketballData.position;
-            document.getElementById('lastResult').textContent = basketballData.lastGame;
-            document.getElementById('nextGame').textContent = basketballData.nextGame;
+            document.getElementById('lastResult').textContent    = basketballData.lastGame;
+            document.getElementById('nextGame').textContent      = basketballData.nextGame;
         }
 
         function formatDate(date) {
