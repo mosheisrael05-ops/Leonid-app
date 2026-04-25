@@ -1,7 +1,7 @@
  import fs from "fs";
 import path from "path";
 
-const API_KEY = process.env.APISPORTS_KEY; // ✅ תוקן
+constconst API_KEY = process.env.BASKETBALL_API_KEY; ✅ תוקן
 const OUT_PATH = path.join(process.cwd(), "data", "bnei-herzliya.json");
 
 const TEAM_ID = 1566;
