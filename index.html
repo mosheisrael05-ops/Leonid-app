@@ -54,7 +54,7 @@
         .treatment-name { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
         .treatment-location { font-size: 30px; color: #95e1d3; font-weight: 500; }
         .no-treatments { font-size: 38px; text-align: center; padding: 40px; color: #95e1d3; font-weight: 600; }
-        .work-info { font-size: 40px; font-weight: 700; padding: 30px; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,111,0.2)); border-radius: 20px; text-align: center; margin: 20px 0; }
+        .work-info { font-size: 40px; font-weight: 700; padding: 30px; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,111,0.2)); border-radius: 20px; text-align: center; margin: 0; }
         .work-name { font-size: 52px; font-weight: 900; color: #ffd93d; text-shadow: 0 0 20px rgba(255,217,61,0.5); }
         .basketball-section { margin-top: 30px; }
         .basketball-stats { display: grid; gap: 20px; margin-top: 25px; }
@@ -108,17 +108,17 @@
             0: [{ time: '12:30', name: 'לינור', nameRu: 'Линор', location: 'בית לווינשטיין רעננה', locationRu: 'Бейт Левинштейн Раанана' }],
             1: [
                 { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '11:45', name: 'התעמלות אישית', nameRu: 'Персональная тренировка', location: 'בית הלוחם תל אביב', locationRu: 'Бейт ха-Лохем Тель-Авив' }
+                { time: '11:45', name: 'התעמלות אישית', nameRu: 'Персональная тренировка', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }
             ],
             2: [{ time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' }],
             3: [
                 { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '11:00', name: 'אימון אישי - שמעון', nameRu: 'Персональная тренировка - Шимон', location: 'בית הלוחם תל אביב', locationRu: 'Бейт ха-Лохем Тель-Авив' }
+                { time: '11:00', name: 'אימון אישי - שמעון', nameRu: 'Персональная тренировка - Шимон', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }
             ],
-            4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אביב', locationRu: 'Бейт ха-Лохем Тель-Авив' }],
+            4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }],
             5: [
                 { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт ха-Лохем Тель-Авив, минус первый этаж' }
+                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Халохем Тель-Авив, минус 1' }
             ],
             6: []
         };
@@ -312,7 +312,6 @@
 
         loadBasketballData();
         updateDisplay();
-        window.addEventListener('load', () => setTimeout(() => speakAll(), 1000));
         document.getElementById('speakButton').addEventListener('click', () => {
             isSpeaking = false; speechSynthesis.cancel(); speakAll();
         });
