@@ -172,12 +172,12 @@
         const russianMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
         let basketballData = {
-            position: 'פלייאוף בית עליון (טופ 8)',
-            positionRu: 'Плей-офф — верхняя группа (топ 8)',
-            lastGame: 'הפסד 81:102 להפועל ירושלים (בית עליון — 18.04.26)',
-            lastGameRu: 'Поражение 81:102 от Апоэль Иерусалим (верхняя группа — 18.04.26)',
-            nextGame: 'נגד עירוני נס ציונה | בית עליון | 26.04.26 | 19:30',
-            nextGameRu: 'против Ирони Нес-Циона | верхняя группа | 26.04.26 | 19:30'
+            position: 'מקום 3 | מאזן 14-6 | 20 משחקים',
+            positionRu: 'Место 3 | Баланс 14-6 | 20 игр',
+            lastGame: 'ניצחון על נס ציונה 95:88 | 26.04.26',
+            lastGameRu: 'Победа над Нес-Ционой 95:88 | 26.04.26',
+            nextGame: 'נגד מכבי ת"א | 24.05.26 | פלייאוף',
+            nextGameRu: 'Против Маккаби Т.А. | 24.05.26 | Плей-офф'
         };
 
         async function loadBasketballData() {
@@ -186,14 +186,12 @@
                 if (!res.ok) throw new Error('JSON not found');
                 const data = await res.json();
 
-                if (data.position) {
-                    basketballData.position   = `מקום ${data.position} | פלייאוף`;
-                    basketballData.positionRu = `Место ${data.position} | Плей-офф`;
-                }
-                if (data.lastGame?.result)   basketballData.lastGame   = data.lastGame.result;
-                if (data.lastGame?.resultRu) basketballData.lastGameRu = data.lastGame.resultRu;
-                if (data.nextGame?.text)     basketballData.nextGame   = data.nextGame.text;
-                if (data.nextGame?.textRu)   basketballData.nextGameRu = data.nextGame.textRu;
+                if (data.position) basketballData.position = data.position;
+                if (data.positionRu) basketballData.positionRu = data.positionRu;
+                if (data.lastGame) basketballData.lastGame = data.lastGame;
+                if (data.lastGameRu) basketballData.lastGameRu = data.lastGameRu;
+                if (data.nextGame) basketballData.nextGame = data.nextGame;
+                if (data.nextGameRu) basketballData.nextGameRu = data.nextGameRu;
 
                 console.log('✅ נתוני כדורסל נטענו מ-data/bnei-herzliya.json');
             } catch (e) {
@@ -201,8 +199,8 @@
             }
 
             document.getElementById('tablePosition').textContent = basketballData.position;
-            document.getElementById('lastResult').textContent    = basketballData.lastGame;
-            document.getElementById('nextGame').textContent      = basketballData.nextGame;
+            document.getElementById('lastResult').textContent = basketballData.lastGame;
+            document.getElementById('nextGame').textContent = basketballData.nextGame;
         }
 
         function formatDate(date) {
