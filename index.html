@@ -7,43 +7,19 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#1a1a2e">
     <title>עוזר יומי לליאוניד</title>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Rubik:wght@400;700;900&display=swap');
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Assistant', 'Rubik', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-        
+        body { font-family: 'Assistant', 'Rubik', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; overflow-x: hidden; }
         .container { max-width: 900px; margin: 0 auto; width: 100%; }
-        
-        .main-button {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            border: none; border-radius: 30px; padding: 50px; margin: 30px 0;
-            cursor: pointer; box-shadow: 0 20px 60px rgba(255,107,107,0.4);
-            transition: all 0.3s ease; width: 100%; position: relative; overflow: hidden;
-        }
+        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgba(255,107,107,0.4); transition: all 0.3s ease; width: 100%; position: relative; overflow: hidden; }
         .main-button:active { transform: scale(0.95); box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
         .button-text { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .button-icon { font-size: 80px; animation: pulse 2s ease-in-out infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .button-label-ru { font-size: 48px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .button-label-he { font-size: 42px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        
-        .info-card {
-            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
-            border-radius: 25px; padding: 35px; margin: 25px 0;
-            border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
+        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
         .date-section { text-align: center; margin-bottom: 40px; }
         .date-ru { font-size: 44px; font-weight: 700; margin-bottom: 15px; color: #4ecdc4; text-shadow: 0 0 20px rgba(78,205,196,0.5); }
         .date-he { font-size: 40px; font-weight: 700; color: #95e1d3; }
@@ -54,20 +30,14 @@
         .treatment-name { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
         .treatment-location { font-size: 30px; color: #95e1d3; font-weight: 500; }
         .no-treatments { font-size: 38px; text-align: center; padding: 40px; color: #95e1d3; font-weight: 600; }
-        .work-info { font-size: 40px; font-weight: 700; padding: 30px; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,111,0.2)); border-radius: 20px; text-align: center; ma[...]
+        .work-info { font-size: 40px; font-weight: 700; padding: 30px; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,111,0.2)); border-radius: 20px; text-align: center; margin: 20px 0; }
         .work-name { font-size: 52px; font-weight: 900; color: #ffd93d; text-shadow: 0 0 20px rgba(255,217,61,0.5); }
         .basketball-section { margin-top: 30px; }
         .basketball-stats { display: grid; gap: 20px; margin-top: 25px; }
         .stat-item { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; border-right: 6px solid #ffd93d; }
         .stat-label { font-size: 32px; color: #95e1d3; margin-bottom: 12px; font-weight: 600; }
         .stat-value { font-size: 38px; font-weight: 800; color: #ffffff; }
-        .status-indicator {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
-            background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%);
-            color: white; padding: 25px 50px; border-radius: 50px; font-size: 36px;
-            font-weight: 700; box-shadow: 0 10px 40px rgba(78,205,196,0.4);
-            z-index: 1000; transition: transform 0.3s ease;
-        }
+        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padding: 25px 50px; border-radius: 50px; font-size: 36px; font-weight: 700; box-shadow: 0 10px 40px rgba(78,205,196,0.4); z-index: 1000; transition: transform 0.3s ease; }
         .status-indicator.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
@@ -151,14 +121,23 @@
             '2026-04-25': 'נתנאל', '2026-04-26': 'מטי', '2026-04-27': 'משה', '2026-04-28': 'גומן',
             '2026-04-29': 'נתנאל', '2026-04-30': 'משה',
             // מאי 2026
-            '2026-05-01': 'גומן',  '2026-05-02': 'נתנאל', '2026-05-03': 'מטי',   '2026-05-04': 'משה',
-            '2026-05-05': 'סטס',   '2026-05-06': 'גומן',  '2026-05-07': 'נתי',   '2026-05-08': 'משה',
-            '2026-05-09': 'גומן',  '2026-05-10': 'מטי',   '2026-05-11': 'משה',   '2026-05-12': 'גומן',
-            '2026-05-13': 'נתי',   '2026-05-14': 'סטס',   '2026-05-15': 'גומן',  '2026-05-16': 'משה',
-            '2026-05-17': 'מטי',   '2026-05-18': 'סטס',   '2026-05-19': 'נתי',   '2026-05-20': 'גומן',
-            '2026-05-21': 'סטס',   '2026-05-22': 'נתי',   '2026-05-23': 'גומן',  '2026-05-24': 'מטי',
-            '2026-05-25': 'משה',   '2026-05-26': 'נתי',   '2026-05-27': 'גומן',  '2026-05-28': 'סטס',
-            '2026-05-29': 'משה',   '2026-05-30': 'גומן',  '2026-05-31': 'מטי'
+            '2026-05-01': 'גומן',  '2026-05-02': 'נתנאל', '2026-05-03': 'מטי',  '2026-05-04': 'משה',
+            '2026-05-05': 'סטס',   '2026-05-06': 'גומן',  '2026-05-07': 'נתי',  '2026-05-08': 'משה',
+            '2026-05-09': 'גומן',  '2026-05-10': 'מטי',   '2026-05-11': 'משה',  '2026-05-12': 'גומן',
+            '2026-05-13': 'נתי',   '2026-05-14': 'סטס',   '2026-05-15': 'גומן', '2026-05-16': 'משה',
+            '2026-05-17': 'מטי',   '2026-05-18': 'סטס',   '2026-05-19': 'נתי',  '2026-05-20': 'גומן',
+            '2026-05-21': 'סטס',   '2026-05-22': 'נתי',   '2026-05-23': 'גומן', '2026-05-24': 'מטי',
+            '2026-05-25': 'משה',   '2026-05-26': 'נתי',   '2026-05-27': 'גומן', '2026-05-28': 'סטס',
+            '2026-05-29': 'משה',   '2026-05-30': 'גומן',  '2026-05-31': 'מטי',
+            // יוני 2026
+            '2026-06-01': 'משה',  '2026-06-02': 'נתי',  '2026-06-03': 'גומן', '2026-06-04': 'סטס',
+            '2026-06-05': 'משה',  '2026-06-06': 'גומן', '2026-06-07': 'סטס',  '2026-06-08': 'נתי',
+            '2026-06-09': 'משה',  '2026-06-10': 'מטי',  '2026-06-11': 'סטס',  '2026-06-12': 'משה',
+            '2026-06-13': 'גומן', '2026-06-14': 'מטי',  '2026-06-15': 'נתי',  '2026-06-16': 'משה',
+            '2026-06-17': 'גומן', '2026-06-18': 'סטס',  '2026-06-19': 'נתי',  '2026-06-20': 'משה',
+            '2026-06-21': 'מטי',  '2026-06-22': 'משה',  '2026-06-23': 'גומן', '2026-06-24': 'נתי',
+            '2026-06-25': 'סטס',  '2026-06-26': 'גומן', '2026-06-27': 'נתי',  '2026-06-28': 'מטי',
+            '2026-06-29': 'גומן', '2026-06-30': 'נתי'
         };
 
         const workerNamesRu = { 'מטי': 'Мати', 'נתנאל': 'Натаниэль', 'נתי': 'Натаниэль', 'גומן': 'Гуман', 'משה': 'Моше', 'סטס': 'Стас' };
@@ -172,12 +151,12 @@
         const russianMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
         let basketballData = {
-            position: 'מקום 5 | מאזן 14-6 | 20 משחקים',
-            positionRu: 'Место 5 | Баланс 14-6 | 20 игр',
-            lastGame: 'ניצחון 95:88 על עירוני נס ציונה (26.04.26)',
-            lastGameRu: 'Победа 95:88 над Ирони Нес-Цион (26.04.26)',
-            nextGame: 'נגד מכבי עירוני ר"ג | 04.05.26 | 21:00',
-            nextGameRu: 'против Маккаби Рамат-Ган | 04.05.26 | 21:00'
+            position: 'מקום 4 | סיום עונה סדירה | פלייאוף מתחיל',
+            positionRu: 'Место 4 | Конец регулярного сезона | Плей-офф начинается',
+            lastGame: 'הפסד 75:137 למכבי ת"א (26.05.26)',
+            lastGameRu: 'Поражение 75:137 от Маккаби Тель-Авив (26.05.26)',
+            nextGame: 'רבע גמר: נגד UNET חולון | 01.06.26 | 18:35 | בבית',
+            nextGameRu: 'Четвертьфинал: против UNET Холон | 01.06.26 | 18:35 | дома'
         };
 
         async function loadBasketballData() {
@@ -185,41 +164,32 @@
                 const res = await fetch('data/bnei-herzliya.json?t=' + Date.now());
                 if (!res.ok) throw new Error('JSON not found');
                 const data = await res.json();
-
-                if (data.position) basketballData.position = data.position;
+                if (data.position)   basketballData.position   = data.position;
                 if (data.positionRu) basketballData.positionRu = data.positionRu;
-                if (data.lastGame) basketballData.lastGame = data.lastGame;
+                if (data.lastGame)   basketballData.lastGame   = data.lastGame;
                 if (data.lastGameRu) basketballData.lastGameRu = data.lastGameRu;
-                if (data.nextGame) basketballData.nextGame = data.nextGame;
+                if (data.nextGame)   basketballData.nextGame   = data.nextGame;
                 if (data.nextGameRu) basketballData.nextGameRu = data.nextGameRu;
-
-                console.log('✅ נתוני כדורסל נטענו מ-data/bnei-herzliya.json');
+                console.log('✅ נתוני כדורסל נטענו');
             } catch (e) {
-                console.log('⚠️ JSON לא זמין — משתמש בנתונים קבועים:', e.message);
+                console.log('⚠️ משתמש בנתונים קבועים');
             }
-
             document.getElementById('tablePosition').textContent = basketballData.position;
-            document.getElementById('lastResult').textContent = basketballData.lastGame;
-            document.getElementById('nextGame').textContent = basketballData.nextGame;
+            document.getElementById('lastResult').textContent    = basketballData.lastGame;
+            document.getElementById('nextGame').textContent      = basketballData.nextGame;
         }
 
         function formatDate(date) {
             const dayOfWeek = date.getDay();
-            const day = date.getDate();
-            const month = date.getMonth();
-            const year = date.getFullYear();
             return {
-                ru: `Сегодня ${russianDays[dayOfWeek]}, ${day} ${russianMonths[month]} ${year}`,
-                he: `היום יום ${hebrewDays[dayOfWeek]}, ${day} ב${hebrewMonths[month]} ${year}`,
-                dayOfWeek: dayOfWeek
+                ru: `Сегодня ${russianDays[dayOfWeek]}, ${date.getDate()} ${russianMonths[date.getMonth()]} ${date.getFullYear()}`,
+                he: `היום יום ${hebrewDays[dayOfWeek]}, ${date.getDate()} ב${hebrewMonths[date.getMonth()]} ${date.getFullYear()}`,
+                dayOfWeek
             };
         }
 
         function getDateKey(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
         }
 
         function getTomorrowWorker(today) {
@@ -228,13 +198,38 @@
             return workSchedule[getDateKey(tomorrow)] || 'אין מידע';
         }
 
+        // היעדרויות זמניות — תאריכים שבהם אוטה לא עובדת
+        const otaAbsent = [
+            '2026-05-31','2026-06-01','2026-06-02','2026-06-03',
+            '2026-06-04','2026-06-05','2026-06-06','2026-06-07'
+        ];
+
+        function getTreatmentsForDate(dateKey, dayOfWeek) {
+            const all = weeklyTreatments[dayOfWeek] || [];
+            if (otaAbsent.includes(dateKey)) {
+                const without = all.filter(t => !t.name.includes('אוטה'));
+                if (all.some(t => t.name.includes('אוטה'))) {
+                    without.unshift({
+                        time: '',
+                        name: '⚠️ אוטה דיטריך — בוטל (בחו"ל עד 07.06.26)',
+                        nameRu: '⚠️ Ота Дитрих — отменено (за границей до 07.06.26)',
+                        location: '',
+                        locationRu: ''
+                    });
+                }
+                return without;
+            }
+            return all;
+        }
+
         function updateDisplay() {
             const today = new Date();
             const dateInfo = formatDate(today);
+            const todayKey = getDateKey(today);
             document.getElementById('dateRu').textContent = dateInfo.ru;
             document.getElementById('dateHe').textContent = dateInfo.he;
 
-            const todayTreatments = weeklyTreatments[dateInfo.dayOfWeek];
+            const todayTreatments = getTreatmentsForDate(todayKey, dateInfo.dayOfWeek);
             const treatmentsContainer = document.getElementById('treatmentsContainer');
             if (todayTreatments && todayTreatments.length > 0) {
                 treatmentsContainer.innerHTML = todayTreatments.map(t => `
@@ -256,10 +251,10 @@
 
         function speakText(text, lang) {
             return new Promise((resolve) => {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = lang; utterance.rate = 0.85; utterance.pitch = 1.0; utterance.volume = 1.0;
-                utterance.onend = resolve; utterance.onerror = resolve;
-                speechSynthesis.speak(utterance);
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = lang; u.rate = 0.85; u.pitch = 1.0; u.volume = 1.0;
+                u.onend = resolve; u.onerror = resolve;
+                speechSynthesis.speak(u);
             });
         }
 
@@ -271,9 +266,12 @@
             speechSynthesis.cancel();
             const today = new Date();
             const dateInfo = formatDate(today);
-            const todayTreatments = weeklyTreatments[dateInfo.dayOfWeek];
+            const todayKey = getDateKey(today);
+            const todayTreatments = getTreatmentsForDate(todayKey, dateInfo.dayOfWeek);
             const tomorrowWorker = getTomorrowWorker(today);
             showStatus('מדבר... / Говорю...');
+
+            // רוסית בלבד
             await speakText(dateInfo.ru, 'ru-RU');
             if (todayTreatments && todayTreatments.length > 0) {
                 await speakText('Твои процедуры сегодня:', 'ru-RU');
@@ -285,6 +283,8 @@
             await speakText(`Бней Герцлия: ${basketballData.positionRu}`, 'ru-RU');
             await speakText(basketballData.lastGameRu, 'ru-RU');
             await speakText(`Следующая игра: ${basketballData.nextGameRu}`, 'ru-RU');
+
+            // עברית בלבד
             await speakText(dateInfo.he, 'he-IL');
             if (todayTreatments && todayTreatments.length > 0) {
                 await speakText('הטיפולים שלך היום:', 'he-IL');
@@ -296,22 +296,21 @@
             await speakText(`בני הרצליה: ${basketballData.position}`, 'he-IL');
             await speakText(basketballData.lastGame, 'he-IL');
             await speakText(`משחק הבא: ${basketballData.nextGame}`, 'he-IL');
+
             showStatus('סיימתי! / Готово!');
             setTimeout(() => hideStatus(), 2000);
             isSpeaking = false;
         }
 
-        function showStatus(message) {
-            const indicator = document.getElementById('statusIndicator');
-            indicator.textContent = message;
-            indicator.classList.add('show');
-        }
+        function showStatus(msg) { const i = document.getElementById('statusIndicator'); i.textContent = msg; i.classList.add('show'); }
         function hideStatus() { document.getElementById('statusIndicator').classList.remove('show'); }
 
         loadBasketballData();
         updateDisplay();
         document.getElementById('speakButton').addEventListener('click', () => {
-            isSpeaking = false; speechSynthesis.cancel(); speakAll();
+            isSpeaking = false;
+            speechSynthesis.cancel();
+            speakAll();
         });
         setInterval(updateDisplay, 60000);
     </script>
