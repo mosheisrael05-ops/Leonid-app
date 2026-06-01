@@ -10,16 +10,16 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Rubik:wght@400;700;900&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Assistant', 'Rubik', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; overflow-x: hidden; }
+        body { font-family: 'Assistant', 'Rubik', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 900px; margin: 0 auto; width: 100%; }
-        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgba(255,107,107,0.4); transition: all 0.3s ease; width: 100%; position: relative; overflow: hidden; }
+        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgba(255,107,107,0.2); transition: all 0.3s ease; }
         .main-button:active { transform: scale(0.95); box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
         .button-text { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .button-icon { font-size: 80px; animation: pulse 2s ease-in-out infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .button-label-ru { font-size: 48px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .button-label-he { font-size: 42px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .date-section { text-align: center; margin-bottom: 40px; }
         .date-ru { font-size: 44px; font-weight: 700; margin-bottom: 15px; color: #4ecdc4; text-shadow: 0 0 20px rgba(78,205,196,0.5); }
         .date-he { font-size: 40px; font-weight: 700; color: #95e1d3; }
@@ -37,7 +37,7 @@
         .stat-item { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; border-right: 6px solid #ffd93d; }
         .stat-label { font-size: 32px; color: #95e1d3; margin-bottom: 12px; font-weight: 600; }
         .stat-value { font-size: 38px; font-weight: 800; color: #ffffff; }
-        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padding: 25px 50px; border-radius: 50px; font-size: 36px; font-weight: 700; box-shadow: 0 10px 40px rgba(78,205,196,0.4); z-index: 1000; transition: transform 0.3s ease; }
+        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padding: 15px 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-size: 16px; z-index: 1000; transition: transform 0.3s ease; }
         .status-indicator.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
@@ -88,7 +88,7 @@
             4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }],
             5: [
                 { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Халохем Тель-Авив' }
+                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Халохем Тель-Авив минус 1 этаж' }
             ],
             6: []
         };
@@ -211,8 +211,8 @@
                 if (all.some(t => t.name.includes('אוטה'))) {
                     without.unshift({
                         time: '',
-                        name: '⚠️ אוטה דיטריך — בוטל (בחו"ל עד 07.06.26)',
-                        nameRu: '⚠️ Ота Дитрих — отменено (за границей до 07.06.26)',
+                        name: 'אוטה דיטריך — בוטל, נסעה לגרמניה, תחזור ב-07.06.26',
+                        nameRu: 'Ота Дитрих — отменено, уехала в Германию, вернётся 07.06.26',
                         location: '',
                         locationRu: ''
                     });
