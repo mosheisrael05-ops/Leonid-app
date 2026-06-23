@@ -9,9 +9,9 @@
     <title>עוזר יומי לליאוניד</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; [...]
         .container { max-width: 900px; margin: 0 auto; width: 100%; }
-        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgba(255,107,107,0.4); transition: all 0.3s ease; }
+        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgb[...]
         .main-button:hover { box-shadow: 0 30px 80px rgba(255,107,107,0.6); transform: translateY(-5px); }
         .main-button:active { transform: scale(0.95); box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
         .button-text { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 15px; }
@@ -19,7 +19,7 @@
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .button-label-ru { font-size: 48px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .button-label-he { font-size: 42px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px[...]
         .date-section { text-align: center; margin-bottom: 40px; }
         .date-ru { font-size: 44px; font-weight: 700; margin-bottom: 15px; color: #4ecdc4; text-shadow: 0 0 20px rgba(78,205,196,0.5); }
         .date-he { font-size: 40px; font-weight: 700; color: #95e1d3; }
@@ -30,14 +30,14 @@
         .treatment-name { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
         .treatment-location { font-size: 30px; color: #95e1d3; font-weight: 500; }
         .no-treatments { font-size: 38px; text-align: center; padding: 40px; color: #95e1d3; font-weight: 600; }
-        .work-info { font-size: 40px; font-weight: 700; padding: 30px; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,111,0.2)); border-radius: 20px; text-align: center; margin-top: 20px; }
+        .work-info { font-size: 40px; font-weight: 700; padding: 30px; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,111,0.2)); border-radius: 20px; text-align: center; ma[...]
         .work-name { font-size: 52px; font-weight: 900; color: #ffd93d; text-shadow: 0 0 20px rgba(255,217,61,0.5); }
         .basketball-section { margin-top: 30px; }
         .basketball-stats { display: grid; gap: 20px; margin-top: 25px; }
         .stat-item { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; border-right: 6px solid #ffd93d; }
         .stat-label { font-size: 32px; color: #95e1d3; margin-bottom: 12px; font-weight: 600; }
         .stat-value { font-size: 38px; font-weight: 800; color: #ffffff; }
-        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padding: 20px 40px; border-radius: 15px; font-size: 24px; font-weight: 700; z-index: 1000; transition: transform 0.3s ease; }
+        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padd[...]
         .status-indicator.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
@@ -80,11 +80,11 @@
         </div>
         <div class="stat-item">
             <div class="stat-label">מצב סדרה / Счёт серии:</div>
-            <div class="stat-value" id="playoffStatus">מכבי ת"א מובילה 1:0 | ניצחון 96:75 במשחק 1</div>
+            <div class="stat-value" id="playoffStatus">מכבי ת"א — אלופת ישראל 2026! ניצחה 3:0 את הפועל ת"א</div>
         </div>
         <div class="stat-item">
             <div class="stat-label">משחק הבא / Следующая игра:</div>
-            <div class="stat-value" id="playoffNext">משחק 2: יום חמישי 19.06.26</div>
+            <div class="stat-value" id="playoffNext">גמר אחרון: מכבי ת"א 83 — הפועל ת"א 79 | מכבי אלופה!</div>
         </div>
     </div>
 </div>
@@ -94,18 +94,18 @@
         const weeklyTreatments = {
             0: [{ time: '12:30', name: 'לינור', nameRu: 'Линор', location: 'בית לווינשטיין רעננה', locationRu: 'Бейт Левинштейн Раанана' }],
             1: [
-                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '11:45', name: 'התעמלות אישית', nameRu: 'Персональная тренировка', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }
+                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-А[...]
+                { time: '11:45', name: 'התעמלות אישית', nameRu: 'Персональная тренировка', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Ха[...]
             ],
-            2: [{ time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' }],
+            2: [{ time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-�[...]
             3: [
-                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрич', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '11:00', name: 'אימון אישי - שמעון', nameRu: 'Персональная тренировка - Шимон', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }
+                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрич', location: 'תל אביב', locationRu: 'Тель-�[...]
+                { time: '11:00', name: 'אימון אישי - שמעון', nameRu: 'Персональная тренировка - Шимон', location: 'בית הלוחם תל אביב', locat[...]
             ],
-            4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }],
+            4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אב[...]
             5: [
-                { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрич', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Халохем Тель-Авив, подвал' }
+                { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрич', location: 'תל אביב', locationRu: 'Тель-�[...]
+                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Хал[...]
             ],
             6: []
         };
@@ -164,8 +164,8 @@
 
         const hebrewDays = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
         const russianDays = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
-        const hebrewMonths = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
-        const russianMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        const hebrewMonths = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר[...]
+        const russianMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'нояб�[...]
 
         let basketballData = {
             position: 'מקום 4 | סיום עונה סדירה | פלייאוף מתחיל',
