@@ -8,18 +8,18 @@
     <meta name="theme-color" content="#1a1a2e">
     <title>עוזר יומי לליאוניד</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Rubik:wght@400;700;900&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; }
+        body { font-family: 'Assistant', 'Rubik', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; overflow-x: hidden; }
         .container { max-width: 900px; margin: 0 auto; width: 100%; }
-        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
-        .main-button:hover { box-shadow: 0 30px 80px rgba(255,107,107,0.6); transform: translateY(-5px); }
+        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgba(255,107,107,0.4); transition: all 0.3s ease; width: 100%; position: relative; overflow: hidden; }
         .main-button:active { transform: scale(0.95); box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
         .button-text { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .button-icon { font-size: 80px; animation: pulse 2s ease-in-out infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .button-label-ru { font-size: 48px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .button-label-he { font-size: 42px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
         .date-section { text-align: center; margin-bottom: 40px; }
         .date-ru { font-size: 44px; font-weight: 700; margin-bottom: 15px; color: #4ecdc4; text-shadow: 0 0 20px rgba(78,205,196,0.5); }
         .date-he { font-size: 40px; font-weight: 700; color: #95e1d3; }
@@ -30,14 +30,14 @@
         .treatment-name { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
         .treatment-location { font-size: 30px; color: #95e1d3; font-weight: 500; }
         .no-treatments { font-size: 38px; text-align: center; padding: 40px; color: #95e1d3; font-weight: 600; }
-        .work-info { font-size: 40px; font-weight: 700; padding: 30px; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,111,0.2)); border-radius: 20px; text-align: center; margin-top: 10px; }
+        .work-info { font-size: 40px; font-weight: 700; padding: 30px; background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,111,0.2)); border-radius: 20px; text-align: center; margin: 20px 0; }
         .work-name { font-size: 52px; font-weight: 900; color: #ffd93d; text-shadow: 0 0 20px rgba(255,217,61,0.5); }
         .basketball-section { margin-top: 30px; }
         .basketball-stats { display: grid; gap: 20px; margin-top: 25px; }
         .stat-item { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; border-right: 6px solid #ffd93d; }
         .stat-label { font-size: 32px; color: #95e1d3; margin-bottom: 12px; font-weight: 600; }
         .stat-value { font-size: 38px; font-weight: 800; color: #ffffff; }
-        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padding: 12px 24px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 300ms ease; }
+        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padding: 25px 50px; border-radius: 50px; font-size: 36px; font-weight: 700; box-shadow: 0 10px 40px rgba(78,205,196,0.4); z-index: 1000; transition: transform 0.3s ease; }
         .status-indicator.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
@@ -72,47 +72,242 @@
             </div>
         </div>
         <div class="info-card basketball-section">
-    <div class="section-title"><span class="section-icon">🏆</span><span>גמר ליגת Winner / Финал</span></div>
-    <div class="basketball-stats">
-        <div class="stat-item">
-            <div class="stat-label">גמר / Финал:</div>
-            <div class="stat-value">מכבי ת"א נגד הפועל ת"א</div>
+            <div class="section-title"><span class="section-icon">🏆</span><span>גמר ליגת Winner / Финал лиги Виннер</span></div>
+            <div class="basketball-stats">
+                <div class="stat-item"><div class="stat-label">גמר / Финал:</div><div class="stat-value">מכבי ת"א נגד הפועל ת"א</div></div>
+                <div class="stat-item"><div class="stat-label">מצב סדרה / Счёт серии:</div><div class="stat-value" id="playoffStatus">מכבי ת"א אלופת ישראל 2026! ניצחה 3:0 את הפועל ת"א</div></div>
+                <div class="stat-item"><div class="stat-label">משחק אחרון / Последняя игра:</div><div class="stat-value" id="playoffNext">מכבי 83 הפועל ת"א 79 — מכבי אלופה!</div></div>
+            </div>
         </div>
-        <div class="stat-item">
-            <div class="stat-label">מצב סדרה / Счёт серии:</div>
-            <div class="stat-value" id="playoffStatus">מכבי ת"א — אלופת ישראל 2026! ניצחה 3:0 את הפועל ת"א</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-label">משחק הבא / Следующая игра:</div>
-            <div class="stat-value" id="playoffNext">גמר אחרון: מכבי ת"א 83 — הפועל ת"א 79 | מכבי אלופה!</div>
-        </div>
-    </div>
-</div>
     </div>
 
     <script>
         const weeklyTreatments = {
             0: [{ time: '12:30', name: 'לינור', nameRu: 'Линор', location: 'בית לווינשטיין רעננה', locationRu: 'Бейт Левинштейн Раанана' }],
             1: [
-                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-אבив' },
-                { time: '11:45', name: 'התעמלות אישית', nameRu: 'Персональная тренировка', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Ха-Лоахем' }
+                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
+                { time: '11:45', name: 'התעמלות אישית', nameRu: 'Персональная тренировка', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }
             ],
             2: [{ time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' }],
             3: [
-                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрич', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '11:00', name: 'אימון אישי - שמעון', nameRu: 'Персональная тренировка - Шимон', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Ха-Лоахем' }
+                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
+                { time: '11:00', name: 'אימון אישי - שמעון', nameRu: 'Персональная тренировка - Шимон', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }
             ],
-            4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Ха-Лоахем' }],
+            4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }],
             5: [
-                { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрич', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Ха-Лоахем, этаж -1' }
+                { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
+                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Халохем Тель-Авив, этаж -1' }
             ],
             6: []
         };
 
         const workSchedule = {
-            // פברואר 2026
             '2026-02-01': 'מטי', '2026-02-02': 'נתנאל', '2026-02-03': 'גומן', '2026-02-04': 'משה',
             '2026-02-05': 'סטס', '2026-02-06': 'גומן', '2026-02-07': 'משה', '2026-02-08': 'מטי',
             '2026-02-09': 'גומן', '2026-02-10': 'משה', '2026-02-11': 'נתנאל', '2026-02-12': 'סטס',
             '2026-02-13': 'משה', '2026-02-14': 'נתנאל', '2026-02-15': 'מטי', '2026-02-16': 'סטס',
+            '2026-02-17': 'משה', '2026-02-18': 'גומן', '2026-02-19': 'נתנאל', '2026-02-20': 'משה',
+            '2026-02-21': 'גומן', '2026-02-22': 'מטי', '2026-02-23': 'נתנאל', '2026-02-24': 'משה',
+            '2026-02-25': 'גומן', '2026-02-26': 'סטס', '2026-02-27': 'נתנאל', '2026-02-28': 'גומן',
+            '2026-03-01': 'מטי', '2026-03-02': 'משה', '2026-03-03': 'גומן', '2026-03-04': 'סטס',
+            '2026-03-05': 'נתנאל', '2026-03-06': 'משה', '2026-03-07': 'גומן', '2026-03-08': 'מטי',
+            '2026-03-09': 'גומן', '2026-03-10': 'משה', '2026-03-11': 'נתנאל', '2026-03-12': 'סטס',
+            '2026-03-13': 'גומן', '2026-03-14': 'משה', '2026-03-15': 'מטי', '2026-03-16': 'נתנאל',
+            '2026-03-17': 'משה', '2026-03-18': 'גומן', '2026-03-19': 'סטס', '2026-03-20': 'משה',
+            '2026-03-21': 'גומן', '2026-03-22': 'מטי', '2026-03-23': 'משה', '2026-03-24': 'גומן',
+            '2026-03-25': 'מטי', '2026-03-26': 'סטס', '2026-03-27': 'גומן', '2026-03-28': 'נתנאל',
+            '2026-03-29': 'מטי', '2026-03-30': 'משה', '2026-03-31': 'נתנאל',
+            '2026-04-01': 'סטס', '2026-04-02': 'גומן', '2026-04-03': 'נתנאל', '2026-04-04': 'גומן',
+            '2026-04-05': 'מטי', '2026-04-06': 'נתנאל', '2026-04-07': 'משה', '2026-04-08': 'גומן',
+            '2026-04-09': 'סטס', '2026-04-10': 'משה', '2026-04-11': 'נתנאל', '2026-04-12': 'מטי',
+            '2026-04-13': 'גומן', '2026-04-14': 'משה', '2026-04-15': 'נתנאל', '2026-04-16': 'סטס',
+            '2026-04-17': 'משה', '2026-04-18': 'גומן', '2026-04-19': 'מטי', '2026-04-20': 'נתנאל',
+            '2026-04-21': 'סטס', '2026-04-22': 'גומן', '2026-04-23': 'סטס', '2026-04-24': 'משה',
+            '2026-04-25': 'נתנאל', '2026-04-26': 'מטי', '2026-04-27': 'משה', '2026-04-28': 'גומן',
+            '2026-04-29': 'נתנאל', '2026-04-30': 'משה',
+            '2026-05-01': 'גומן', '2026-05-02': 'נתנאל', '2026-05-03': 'מטי', '2026-05-04': 'משה',
+            '2026-05-05': 'סטס', '2026-05-06': 'גומן', '2026-05-07': 'נתי', '2026-05-08': 'משה',
+            '2026-05-09': 'גומן', '2026-05-10': 'מטי', '2026-05-11': 'משה', '2026-05-12': 'גומן',
+            '2026-05-13': 'נתי', '2026-05-14': 'סטס', '2026-05-15': 'גומן', '2026-05-16': 'משה',
+            '2026-05-17': 'מטי', '2026-05-18': 'סטס', '2026-05-19': 'נתי', '2026-05-20': 'גומן',
+            '2026-05-21': 'סטס', '2026-05-22': 'נתי', '2026-05-23': 'גומן', '2026-05-24': 'מטי',
+            '2026-05-25': 'משה', '2026-05-26': 'נתי', '2026-05-27': 'גומן', '2026-05-28': 'סטס',
+            '2026-05-29': 'משה', '2026-05-30': 'גומן', '2026-05-31': 'מטי',
+            '2026-06-01': 'משה', '2026-06-02': 'נתי', '2026-06-03': 'גומן', '2026-06-04': 'סטס',
+            '2026-06-05': 'משה', '2026-06-06': 'גומן', '2026-06-07': 'סטס', '2026-06-08': 'נתי',
+            '2026-06-09': 'משה', '2026-06-10': 'מטי', '2026-06-11': 'סטס', '2026-06-12': 'משה',
+            '2026-06-13': 'גומן', '2026-06-14': 'מטי', '2026-06-15': 'נתי', '2026-06-16': 'משה',
+            '2026-06-17': 'גומן', '2026-06-18': 'סטס', '2026-06-19': 'נתי', '2026-06-20': 'משה',
+            '2026-06-21': 'מטי', '2026-06-22': 'משה', '2026-06-23': 'גומן', '2026-06-24': 'נתי',
+            '2026-06-25': 'סטס', '2026-06-26': 'גומן', '2026-06-27': 'נתי', '2026-06-28': 'מטי',
+            '2026-06-29': 'גומן', '2026-06-30': 'נתי',
+            '2026-07-01': 'משה', '2026-07-02': 'סטס', '2026-07-03': 'נתי', '2026-07-04': 'סטס',
+            '2026-07-05': 'מטי', '2026-07-06': 'סטס', '2026-07-07': 'נתי', '2026-07-08': 'משה',
+            '2026-07-09': 'סטס', '2026-07-10': 'גומן', '2026-07-11': 'נתי', '2026-07-12': 'מטי',
+            '2026-07-13': 'משה', '2026-07-14': 'נתי', '2026-07-15': 'גומן', '2026-07-16': 'סטס',
+            '2026-07-17': 'משה', '2026-07-18': 'גומן', '2026-07-19': 'מטי', '2026-07-20': 'גומן',
+            '2026-07-21': 'משה', '2026-07-22': 'סטס', '2026-07-23': 'נתי', '2026-07-24': 'גומן',
+            '2026-07-25': 'משה', '2026-07-26': 'מטי', '2026-07-27': 'גומן', '2026-07-28': 'משה',
+            '2026-07-29': 'סטס', '2026-07-30': 'נתי', '2026-07-31': 'גומן'
+        };
+
+        const workerNamesRu = { 'מטי': 'Мати', 'נתנאל': 'Натаниэль', 'נתי': 'Натаниэль', 'גומן': 'Гуман', 'משה': 'Моше', 'סטס': 'Стас' };
+        const workerPronounce = { 'נתנאל': 'נתנאייל', 'נתי': 'נתנאייל', 'מטי': 'מאטי' };
+        function getWorkerRu(name) { return workerNamesRu[name] || name; }
+        function getWorkerSpeak(name) { return workerPronounce[name] || name; }
+
+        const hebrewDays = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+        const russianDays = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+        const hebrewMonths = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+        const russianMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
+        let basketballData = {
+            position: 'מקום 4 | נפלה ברבע גמר (0:2 לחולון)',
+            positionRu: 'Место 4 | Вылет в четвертьфинале (0:2 от Холона)',
+            lastGame: 'הפסד 84:99 להפועל חולון (03.06.26) | סיום עונה',
+            lastGameRu: 'Поражение 84:99 от Апоэль Холон (03.06.26) | Конец сезона',
+            nextGame: 'העונה הסתיימה — להתראות בעונה הבאה!',
+            nextGameRu: 'Сезон завершён — до следующего сезона!'
+        };
+
+        async function loadBasketballData() {
+            try {
+                const res = await fetch('data/bnei-herzliya.json?t=' + Date.now());
+                if (!res.ok) throw new Error('JSON not found');
+                const data = await res.json();
+                if (data.position)   basketballData.position   = data.position;
+                if (data.positionRu) basketballData.positionRu = data.positionRu;
+                if (data.lastGame)   basketballData.lastGame   = data.lastGame;
+                if (data.lastGameRu) basketballData.lastGameRu = data.lastGameRu;
+                if (data.nextGame)   basketballData.nextGame   = data.nextGame;
+                if (data.nextGameRu) basketballData.nextGameRu = data.nextGameRu;
+            } catch (e) {
+                console.log('משתמש בנתונים קבועים');
+            }
+            document.getElementById('tablePosition').textContent = basketballData.position;
+            document.getElementById('lastResult').textContent    = basketballData.lastGame;
+            document.getElementById('nextGame').textContent      = basketballData.nextGame;
+        }
+
+        function formatDate(date) {
+            const dayOfWeek = date.getDay();
+            return {
+                ru: `Сегодня ${russianDays[dayOfWeek]}, ${date.getDate()} ${russianMonths[date.getMonth()]} ${date.getFullYear()}`,
+                he: `היום יום ${hebrewDays[dayOfWeek]}, ${date.getDate()} ב${hebrewMonths[date.getMonth()]} ${date.getFullYear()}`,
+                dayOfWeek
+            };
+        }
+
+        function getDateKey(date) {
+            return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+        }
+
+        function getTomorrowWorker(today) {
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            return workSchedule[getDateKey(tomorrow)] || 'אין מידע';
+        }
+
+        function getTreatmentsForDate(dateKey, dayOfWeek) {
+            const all = weeklyTreatments[dayOfWeek] || [];
+            return all;
+        }
+
+        function updateDisplay() {
+            const today = new Date();
+            const dateInfo = formatDate(today);
+            const todayKey = getDateKey(today);
+            document.getElementById('dateRu').textContent = dateInfo.ru;
+            document.getElementById('dateHe').textContent = dateInfo.he;
+
+            const todayTreatments = getTreatmentsForDate(todayKey, dateInfo.dayOfWeek);
+            const treatmentsContainer = document.getElementById('treatmentsContainer');
+            if (todayTreatments && todayTreatments.length > 0) {
+                treatmentsContainer.innerHTML = todayTreatments.map(t => `
+                    <div class="treatment-item">
+                        <div class="treatment-time">${t.time}</div>
+                        <div class="treatment-name">${t.name}</div>
+                        <div class="treatment-location">${t.location}</div>
+                    </div>`).join('');
+            } else {
+                treatmentsContainer.innerHTML = '<div class="no-treatments">מנוחה היום 😊<br>Отдых сегодня</div>';
+            }
+
+            const tomorrowWorker = getTomorrowWorker(today);
+            document.getElementById('tomorrowWorker').innerHTML = `
+                <div style="color:#95e1d3;font-size:36px;margin-bottom:10px;">Завтра работает:</div>
+                <div class="work-name">${getWorkerRu(tomorrowWorker)}</div>
+                <div style="color:#95e1d3;font-size:36px;margin-top:15px;">מחר עובד: ${tomorrowWorker}</div>`;
+        }
+
+        function speakText(text, lang) {
+            return new Promise((resolve) => {
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = lang; u.rate = 0.85; u.pitch = 1.0; u.volume = 1.0;
+                u.onend = resolve; u.onerror = resolve;
+                speechSynthesis.speak(u);
+            });
+        }
+
+        let isSpeaking = false;
+
+        async function speakAll() {
+            if (isSpeaking) return;
+            isSpeaking = true;
+            speechSynthesis.cancel();
+            const today = new Date();
+            const dateInfo = formatDate(today);
+            const todayKey = getDateKey(today);
+            const todayTreatments = getTreatmentsForDate(todayKey, dateInfo.dayOfWeek);
+            const tomorrowWorker = getTomorrowWorker(today);
+            showStatus('מדבר... / Говорю...');
+
+            // רוסית
+            await speakText(dateInfo.ru, 'ru-RU');
+            if (todayTreatments && todayTreatments.length > 0) {
+                await speakText('Твои процедуры сегодня:', 'ru-RU');
+                for (const t of todayTreatments) await speakText(`${t.nameRu}, ${t.locationRu}, в ${t.time}`, 'ru-RU');
+            } else {
+                await speakText('Сегодня отдых, процедур нет', 'ru-RU');
+            }
+            await speakText(`Завтра работает ${getWorkerRu(tomorrowWorker)}`, 'ru-RU');
+            await speakText(`Бней Герцлия: ${basketballData.positionRu}`, 'ru-RU');
+            await speakText(basketballData.lastGameRu, 'ru-RU');
+            await speakText(`Следующая игра: ${basketballData.nextGameRu}`, 'ru-RU');
+            await speakText('Финал лиги Виннер: Маккаби Тель-Авив — чемпион Израиля две тысячи двадцать шесть!', 'ru-RU');
+            await speakText('Маккаби победила Апоэль Тель-Авив три ноль. Финальный счёт восемьдесят три — семьдесят девять.', 'ru-RU');
+
+            // עברית
+            await speakText(dateInfo.he, 'he-IL');
+            if (todayTreatments && todayTreatments.length > 0) {
+                await speakText('הטיפולים שלך היום:', 'he-IL');
+                for (const t of todayTreatments) await speakText(`${t.name}, ${t.location}, בשעה ${t.time}`, 'he-IL');
+            } else {
+                await speakText('היום מנוחה, אין טיפולים', 'he-IL');
+            }
+            await speakText(`מחר עובד ${getWorkerSpeak(tomorrowWorker)}`, 'he-IL');
+            await speakText(`בני הרצליה: ${basketballData.position}`, 'he-IL');
+            await speakText(basketballData.lastGame, 'he-IL');
+            await speakText(`משחק הבא: ${basketballData.nextGame}`, 'he-IL');
+            await speakText('גמר ליגת וינר: מכבי תל אביב אלופת ישראל אלפיים עשרים ושש!', 'he-IL');
+            await speakText('מכבי ניצחה את הפועל תל אביב שלוש אפס. משחק אחרון: שמונים ושלוש נגד שבעים ותשע.', 'he-IL');
+
+            showStatus('סיימתי! / Готово!');
+            setTimeout(() => hideStatus(), 2000);
+            isSpeaking = false;
+        }
+
+        function showStatus(msg) { const i = document.getElementById('statusIndicator'); i.textContent = msg; i.classList.add('show'); }
+        function hideStatus() { document.getElementById('statusIndicator').classList.remove('show'); }
+
+        loadBasketballData();
+        updateDisplay();
+        document.getElementById('speakButton').addEventListener('click', () => {
+            isSpeaking = false;
+            speechSynthesis.cancel();
+            speakAll();
+        });
+        setInterval(updateDisplay, 60000);
+    </script>
+</body>
+</html>
