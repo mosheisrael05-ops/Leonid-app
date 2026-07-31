@@ -10,16 +10,16 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Rubik:wght@400;700;900&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Assistant', 'Rubik', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; overflow-x: hidden; }
+        body { font-family: 'Assistant', 'Rubik', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 900px; margin: 0 auto; width: 100%; }
-        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgba(255,107,107,0.4); transition: all 0.3s ease; width: 100%; position: relative; overflow: hidden; }
+        .main-button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border: none; border-radius: 30px; padding: 50px; margin: 30px 0; cursor: pointer; box-shadow: 0 20px 60px rgba(255,107,107,0.2); transition: all 0.3s ease; }
         .main-button:active { transform: scale(0.95); box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
         .button-text { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .button-icon { font-size: 80px; animation: pulse 2s ease-in-out infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .button-label-ru { font-size: 48px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .button-label-he { font-size: 42px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .info-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 35px; margin: 25px 0; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .date-section { text-align: center; margin-bottom: 40px; }
         .date-ru { font-size: 44px; font-weight: 700; margin-bottom: 15px; color: #4ecdc4; text-shadow: 0 0 20px rgba(78,205,196,0.5); }
         .date-he { font-size: 40px; font-weight: 700; color: #95e1d3; }
@@ -37,7 +37,7 @@
         .stat-item { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; border-right: 6px solid #ffd93d; }
         .stat-label { font-size: 32px; color: #95e1d3; margin-bottom: 12px; font-weight: 600; }
         .stat-value { font-size: 38px; font-weight: 800; color: #ffffff; }
-        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padding: 25px 50px; border-radius: 50px; font-size: 36px; font-weight: 700; box-shadow: 0 10px 40px rgba(78,205,196,0.4); z-index: 1000; transition: transform 0.3s ease; }
+        .status-indicator { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4ecdc4 0%, #44a8a0 100%); color: white; padding: 20px 40px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease; font-size: 24px; font-weight: 700; z-index: 1000; }
         .status-indicator.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
@@ -75,8 +75,8 @@
             <div class="section-title"><span class="section-icon">🏆</span><span>גמר ליגת Winner / Финал лиги Виннер</span></div>
             <div class="basketball-stats">
                 <div class="stat-item"><div class="stat-label">גמר / Финал:</div><div class="stat-value">מכבי ת"א נגד הפועל ת"א</div></div>
-                <div class="stat-item"><div class="stat-label">מצב סדרה / Счёт серии:</div><div class="stat-value" id="playoffStatus">מכבי ת"א אלופת ישראל 2026! ניצחה 3:0 את הפועל ת"א</div></div>
-                <div class="stat-item"><div class="stat-label">משחק אחרון / Последняя игра:</div><div class="stat-value" id="playoffNext">מכבי 83 הפועל ת"א 79 — מכבי אלופה!</div></div>
+                <div class="stat-item"><div class="stat-label">מצב סדרה / Счёт серии:</div><div class="stat-value" id="playoffStatus">מכבי ת"א אלופת ישראל 2026! נצחון 3:0</div></div>
+                <div class="stat-item"><div class="stat-label">משחק אחרון / Последняя игра:</div><div class="stat-value" id="playoffNext">מכבי 83 הפועל ת"א 79 — משחק שלישי וקביעה</div></div>
             </div>
         </div>
     </div>
@@ -96,7 +96,7 @@
             4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем Тель-Авив' }],
             5: [
                 { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
-                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Халохем Тель-Авив, этаж -1' }
+                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Халохем Тель-Авив минус 1 этаж' }
             ],
             6: []
         };
@@ -148,7 +148,16 @@
             '2026-07-17': 'משה', '2026-07-18': 'גומן', '2026-07-19': 'מטי', '2026-07-20': 'גומן',
             '2026-07-21': 'משה', '2026-07-22': 'סטס', '2026-07-23': 'נתי', '2026-07-24': 'גומן',
             '2026-07-25': 'משה', '2026-07-26': 'מטי', '2026-07-27': 'גומן', '2026-07-28': 'משה',
-            '2026-07-29': 'סטס', '2026-07-30': 'נתי', '2026-07-31': 'גומן'
+            '2026-07-29': 'סטס', '2026-07-30': 'נתי', '2026-07-31': 'גומן',
+            // אוגוסט 2026
+            '2026-08-01': 'משה', '2026-08-02': 'גומן', '2026-08-03': 'נתי', '2026-08-04': 'משה',
+            '2026-08-05': 'גומן', '2026-08-06': 'סטס', '2026-08-07': 'נתי', '2026-08-08': 'גומן',
+            '2026-08-09': 'מטי', '2026-08-10': 'משה', '2026-08-11': 'סטס', '2026-08-12': 'נתי',
+            '2026-08-13': 'מטי', '2026-08-14': 'משה', '2026-08-15': 'גומן', '2026-08-16': 'מטי',
+            '2026-08-17': 'נתי', '2026-08-18': 'גומן', '2026-08-19': 'משה', '2026-08-20': 'סטס',
+            '2026-08-21': 'גומן', '2026-08-22': 'נתי', '2026-08-23': 'מטי', '2026-08-24': 'גומן',
+            '2026-08-25': 'נתי', '2026-08-26': 'משה', '2026-08-27': 'סטס', '2026-08-28': 'גומן',
+            '2026-08-29': 'נתי', '2026-08-30': 'מטי', '2026-08-31': 'משה'
         };
 
         const workerNamesRu = { 'מטי': 'Мати', 'נתנאל': 'Натаниэль', 'נתי': 'Натаниэль', 'גומן': 'Гуман', 'משה': 'Моше', 'סטס': 'Стас' };
