@@ -62,7 +62,7 @@
         </div>
         <div class="info-card">
             <div class="section-title"><span class="section-icon">👷</span><span>מי עובד מחר / Кто работает завтра</span></div>
-            <div class="work-info" id="tomorrowWorker">טוען... / Загрузка...</div>
+            <div class="work-info" id="tomorrowWorker">טוען... / Загרузка...</div>
         </div>
         <div class="info-card basketball-section">
             <div class="section-title"><span class="section-icon">🏀</span><span>בני הרצליה / Бней Герцлия</span></div>
@@ -76,8 +76,8 @@
             <div class="section-title"><span class="section-icon">🏆</span><span>גמר ליגת Winner / Финал лиги Виннер</span></div>
             <div class="basketball-stats">
                 <div class="stat-item"><div class="stat-label">גמר / Финал:</div><div class="stat-value">מכבי ת"א נגד הפועל ת"א</div></div>
-                <div class="stat-item"><div class="stat-label">מצב סדרה / Счёт серии:</div><div class="stat-value" id="playoffStatus">מכבי ת"א אלופת ישראל 2026! נ[[...]</div></div>
-                <div class="stat-item"><div class="stat-label">משחק אחרון / Последняя игра:</div><div class="stat-value" id="playoffNext">מכבי 83 הפועל ת"א 79 — [...]</div></div>
+                <div class="stat-item"><div class="stat-label">מצב סדרה / Счёт серии:</div><div class="stat-value" id="playoffStatus">מכבי ת"א אלופת ישראל 2026!</div></div>
+                <div class="stat-item"><div class="stat-label">משחק אחרון / Последняя игра:</div><div class="stat-value" id="playoffNext">מכבי 83 הפועל ת"א 79</div></div>
             </div>
         </div>
     </div>
@@ -86,18 +86,18 @@
         const weeklyTreatments = {
             0: [{ time: '12:30', name: 'לינור', nameRu: 'Линор', location: 'בית לווינשטיין רעננה', locationRu: 'Бейт Левинштейн Раанана' }],
             1: [
-                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-А[...]
-                { time: '11:45', name: 'התעמלות אישית', nameRu: 'Персональная тренировка', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Ха[...]
+                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
+                { time: '11:45', name: 'התעמלות אישית', nameRu: 'Персональная тренировка', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем' }
             ],
-            2: [{ time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-А[...]
+            2: [{ time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' }],
             3: [
-                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрih', location: 'תל אביב', locationRu: 'Тель-А[...]
-                { time: '11:00', name: 'אימון אישי - שמעון', nameRu: 'Персональная тренировка - Шимон', location: 'בית הלוחם תל אביב', locati[...]
+                { time: '10:45', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
+                { time: '11:00', name: 'אימון אישי - שמעון', nameRu: 'Персональная тренировка - Шимон', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем' }
             ],
-            4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אב[[...]
+            4: [{ time: '11:30', name: 'התעמלות אישית - ליאוניד', nameRu: 'Персональная тренировка - Леонид', location: 'בית הלוחם תל אביב', locationRu: 'Бейт Халохем' }],
             5: [
-                { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-А[...]
-                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Хал[[...]
+                { time: '11:00', name: 'פיזיותרפיה - אוטה דיטריך', nameRu: 'Физиотерапия - Ота Дитрих', location: 'תל אביב', locationRu: 'Тель-Авив' },
+                { time: '12:30', name: 'אולג פגוסט', nameRu: 'Олег Пагост', location: 'בית הלוחם תל אביב קומה מינוס אחת', locationRu: 'Бейт Халохем минус один' }
             ],
             6: []
         };
@@ -253,9 +253,9 @@
 
             const tomorrowWorker = getTomorrowWorker(today);
             document.getElementById('tomorrowWorker').innerHTML = `
-                <div style="color:#95e1d3;font-size:36px;margin-bottom:10px;">Завтра работает:</div>
+                <div style="color:#95e1d3;font-size:clamp(18px, 5vw, 36px);margin-bottom:10px;">Завтра работает:</div>
                 <div class="work-name">${getWorkerRu(tomorrowWorker)}</div>
-                <div style="color:#95e1d3;font-size:36px;margin-top:15px;">מחר עובד: ${tomorrowWorker}</div>`;
+                <div style="color:#95e1d3;font-size:clamp(18px, 5vw, 36px);margin-top:15px;">מחר עובד: ${tomorrowWorker}</div>`;
         }
 
         function speakText(text, lang) {
