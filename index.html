@@ -75,14 +75,6 @@
                 <div class="stat-item"><div class="stat-label">משחק הבא / Следующая игра:</div><div class="stat-value" id="nextGame">טוען...</div></div>
             </div>
         </div>
-        <div class="info-card basketball-section">
-            <div class="section-title"><span class="section-icon">🏆</span><span>גמר ליגת Winner / Финал лиги Виннер</span></div>
-            <div class="basketball-stats">
-                <div class="stat-item"><div class="stat-label">גמר / Финал:</div><div class="stat-value">מכבי ת"א נגד הפועל ת"א</div></div>
-                <div class="stat-item"><div class="stat-label">מצב סדרה / Счёт серии:</div><div class="stat-value" id="playoffStatus">מכבי ת"א אלופת ישראל 2026!</div></div>
-                <div class="stat-item"><div class="stat-label">משחק אחרון / Последняя игра:</div><div class="stat-value" id="playoffNext">מכבי 83 הפועל ת"א 79</div></div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -333,8 +325,6 @@
             await speakText(`Бней Герцлия: ${basketballData.positionRu}`, 'ru-RU');
             await speakText(basketballData.lastGameRu, 'ru-RU');
             await speakText(`Следующая игра: ${basketballData.nextGameRu}`, 'ru-RU');
-            await speakText('Финал лиги Виннер: Маккаби Тель-Авив — чемпион Израиля две тысячи двадцать шесть!', 'ru-RU');
-            await speakText('Маккаби победила Апоэль Тель-Авив три ноль. Финальный счёт восемьдесят три — семьдесят девять.', 'ru-RU');
 
             // עברית
             await speakText(dateInfo.he, 'he-IL');
@@ -348,8 +338,6 @@
             await speakText(`בני הרצליה: ${basketballData.position}`, 'he-IL');
             await speakText(basketballData.lastGame, 'he-IL');
             await speakText(`משחק הבא: ${basketballData.nextGame}`, 'he-IL');
-            await speakText('גמר ליגת וינר: מכבי תל אביב אלופת ישראל אלפיים עשרים ושש!', 'he-IL');
-            await speakText('מכבי ניצחה את הפועל תל אביב שלוש אפס. משחק אחרון: שמונים ושלוש נגד שבעים ותשע.', 'he-IL');
 
             showStatus('סיימתי! / Готово!');
             setTimeout(() => hideStatus(), 2000);
