@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 """Fetch Bnei Herzliya games from bhbasket.co.il -> data/bhbasket-games.json.
 On failure (network error or zero games) exits 0 without touching the file."""
 import datetime
@@ -17,7 +17,30 @@ ID_RE = re.compile(r"GameId=(\d+)", re.I)
 TIME_RE = re.compile(r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b")
 SCORE_RE = re.compile(r"\b\d{1,3}\s?:\s?\d{1,3}\b")
 DATE_RE = re.compile(r"\b\d{1,2}[./]\d{1,2}(?:[./]\d{2,4})?\b")
-COMPETITIONS = ["ליגת ווינר", "ווינר", "צ'מפיונס", "ליגת האלופות", "גביע", "פיינל פור", "ידידות"]
+COMPETITIONS = [  # (text found on page, clean name)
+    ("Winner", "ליגת ווינר"), ("ווינר", "ליגת ווינר"),
+    ("צ'מפיונס", "ליגת האלופות"), ("ליגת האלופות", "ליגת האלופות"),
+    ("גביע", "גביע המדינה"), ("פיינל פור", "פיינל פור"), ("ידידות", "משחק ידידות"),
+]
+HE_MONTHS = {"ינואר": 1, "פברואר": 2, "מרץ": 3, "מרס": 3, "אפריל": 4, "מאי": 5, "יוני": 6,
+             "יולי": 7, "אוגוסט": 8, "ספטמבר": 9, "אוקטובר": 10, "נובמבר": 11, "דצמבר": 12}
+HE_DATE_RE = re.compile(r"\b(\d{1,2})\s+ב?(" + "|".join(HE_MONTHS) + r")")
+TEAM = "בני הרצליה"
+
+
+def season_start_year():
+    today = datetime.date.today()
+    return today.year if today.month >= 8 else today.year - 1
+
+
+def to_iso(day, month):
+    """Season runs Aug-Jul: Aug-Dec in start year, Jan-Jul in the next year."""
+    start = season_start_year()
+    year = start if month >= 8 else start + 1
+    try:
+        return datetime.date(year, month, day).isoformat()
+    except ValueError:
+        return ""
 
 
 def ids_in(el):
@@ -44,11 +67,15 @@ def parse(text):
     time = time_m.group(0) if time_m else ""
     scores = [s.replace(" ", "") for s in SCORE_RE.findall(text) if s.replace(" ", "") != time]
     date_m = DATE_RE.search(text)
-    competition = next((c for c in COMPETITIONS if c in text), "")
+    he_m = HE_DATE_RE.search(text)
+    date_iso = to_iso(int(he_m.group(1)), HE_MONTHS[he_m.group(2)]) if he_m else ""
+    date_text = f"{he_m.group(1)} ב{he_m.group(2)}" if he_m else (date_m.group(0) if date_m else "")
+    competition = next((clean for key, clean in COMPETITIONS if key in text), "")
     home_away = "בית" if "בית" in text else ("חוץ" if "חוץ" in text else "")
     broadcast_m = re.search(r"(שידור טרם נקבע|שידור[^|•]{0,15}|ספורט\s?5\+?|ערוץ\s?\d+|כאן\s?11)", text)
     return {
-        "date_text": date_m.group(0) if date_m else "",
+        "date": date_iso,
+        "date_text": date_text,
         "time": time,
         "competition": competition,
         "home_away": home_away,
@@ -76,7 +103,12 @@ def main():
         box = game_box(a)
         text = " ".join(box.get_text(" ", strip=True).split())
         teams = [img.get("alt", "").strip() for img in box.find_all("img") if img.get("alt", "").strip()]
-        game = {"game_id": gid, **parse(text), "teams": teams, "raw_text": text}
+        info = parse(text)
+        comp_words = [k for k, _ in COMPETITIONS]
+        opponent = next((t for t in teams if TEAM not in t and not any(w in t for w in comp_words)), "")
+        played = bool(info["score"]) and info["score"] not in ("0:0", "00:00")
+        game = {"game_id": gid, **info, "opponent": opponent, "played": played,
+                "teams": teams, "raw_text": text}
         games.append(game)
 
     if not games:
