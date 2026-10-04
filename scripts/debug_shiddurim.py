@@ -20,6 +20,6 @@ for url in ["https://t.me/s/Shiddurim", "https://t.me/Shiddurim/4610?embed=1&mod
     out.append({"url": r.url, "status": r.status_code, "len": len(r.text),
                 "title": soup.title.string if soup.title else None,
                 "links": sorted({a["href"] for a in soup.find_all("a", href=True) if "before=" in a["href"] or "after=" in a["href"]}),
-                "messages": msgs, "head": r.text[:1500] if not msgs else ""})
+                "messages": msgs, "head": "\n".join(str(t) for t in soup.find_all("meta"))[:5000]})
 open("data/shiddurim-raw.json", "w", encoding="utf-8").write(json.dumps(out, ensure_ascii=False, indent=1))
 print(json.dumps([{k: v for k, v in o.items() if k != "messages"} | {"n": len(o["messages"])} for o in out], ensure_ascii=False)[:3000])
