@@ -99,10 +99,16 @@ def match(games, posts):
             for g in games:
                 if g.get("played") or not g.get("date"):
                     continue
-                if date.isoformat() == g["date"]:  # at most one game a day
-                    found[g["game_id"]] = {"date": g["date"], "time": g.get("time", ""),
-                                           "opponent": g.get("opponent", ""), "channel": channel,
-                                           "text": line, "post": f"https://t.me/{post['id']}"}
+                if date.isoformat() != g["date"]:
+                    continue
+                # prefer an item whose time matches kick-off (another "בני הרצליה" sport the same day)
+                prev = found.get(g["game_id"])
+                if prev and prev["text_time"] == g.get("time") and time != g.get("time"):
+                    continue
+                found[g["game_id"]] = {"date": g["date"], "time": g.get("time", ""),
+                                       "opponent": g.get("opponent", ""), "channel": channel,
+                                       "text_time": time, "text": line,
+                                       "post": f"https://t.me/{post['id']}"}
     return found
 
 
