@@ -115,8 +115,18 @@ def main():
         print("no games parsed")
         return
 
+    # Keep previously scraped played games the site no longer lists, so the last result
+    # stays available until a newer game gets a final score.
+    try:
+        old = json.loads(OUT.read_text(encoding="utf-8")).get("games", [])
+    except Exception:
+        old = []
+    current_ids = {g["game_id"] for g in games}
+    games += [g for g in old if g.get("played") and g.get("game_id") not in current_ids]
+    games.sort(key=lambda g: g.get("date") or "9999")
+
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    data = {"updated": datetime.datetime.now(datetime.timezone.utc).isoformat(), "source": URL, "games": games}
+    data ={"updated": datetime.datetime.now(datetime.timezone.utc).isoformat(), "source": URL, "games": games}
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"saved {len(games)} games")
 

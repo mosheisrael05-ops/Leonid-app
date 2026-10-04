@@ -70,7 +70,7 @@
         <div class="info-card basketball-section">
             <div class="section-title"><span class="section-icon">🏀</span><span>בני הרצליה / Бней Герцлия</span></div>
             <div class="basketball-stats">
-                <div class="stat-item"><div class="stat-label">מיקום בטבלה / Место в таблице:</div><div class="stat-value" id="tablePosition">טוען...</div></div>
+                <div class="stat-item" id="tablePositionItem" style="display:none"><div class="stat-label">מיקום בטבלה / Место в таблице:</div><div class="stat-value" id="tablePosition">טוען...</div></div>
                 <div class="stat-item"><div class="stat-label">משחק אחרון / Последняя игра:</div><div class="stat-value" id="lastResult">טוען...</div></div>
                 <div class="stat-item"><div class="stat-label">משחק הבא / Следующая игра:</div><div class="stat-value" id="nextGame">טוען...</div></div>
             </div>
@@ -184,8 +184,8 @@
         const russianMonths = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
         let basketballData = {
-            position: 'מקום 4 | נפלה ברבע גמר (0:2 לחולון)',
-            positionRu: 'Место 4 | Вылет в четвертьфинале (0:2 от Холона)',
+            position: '',
+            positionRu: '',
             lastGame: 'הפסד 84:99 להפועל חולון (03.06.26) | סיום עונה',
             lastGameRu: 'Поражение 84:99 от Апоэль Холон (03.06.26) | Конец сезона',
             nextGame: 'העונה הסתיימה — להתראות בעונה הבאה!',
@@ -197,8 +197,11 @@
                 const res = await fetch('data/bnei-herzliya.json?t=' + Date.now());
                 if (!res.ok) throw new Error('JSON not found');
                 const data = await res.json();
-                if (data.position)   basketballData.position   = data.position;
-                if (data.positionRu) basketballData.positionRu = data.positionRu;
+                const st = data.standing;
+                if (st && st.position && st.total) {
+                    basketballData.position   = `מקום ${st.position} מתוך ${st.total} בטבלה (${st.wins} נצחונות, ${st.losses} הפסדים)`;
+                    basketballData.positionRu = `Место ${st.position} из ${st.total} в таблице (${st.wins} побед, ${st.losses} поражений)`;
+                }
                 if (data.lastGame)   basketballData.lastGame   = data.lastGame;
                 if (data.lastGameRu) basketballData.lastGameRu = data.lastGameRu;
                 if (data.nextGame)   basketballData.nextGame   = data.nextGame;
@@ -267,6 +270,7 @@
                 console.log('bhbasket-games.json לא נטען');
             }
             document.getElementById('tablePosition').textContent = basketballData.position;
+            document.getElementById('tablePositionItem').style.display = basketballData.position ? '' : 'none';
             document.getElementById('lastResult').textContent    = basketballData.lastGame;
             document.getElementById('nextGame').textContent      = basketballData.nextGame;
         }
@@ -353,7 +357,7 @@
                 await speakText('Сегодня отдых, процедур нет', 'ru-RU');
             }
             await speakText(`Завтра работает ${getWorkerRu(tomorrowWorker)}`, 'ru-RU');
-            await speakText(`Бней Герцлия: ${basketballData.positionRu}`, 'ru-RU');
+            if (basketballData.positionRu) await speakText(`Бней Герцлия: ${basketballData.positionRu}`, 'ru-RU');
             await speakText(basketballData.lastGameRu, 'ru-RU');
             await speakText(`Следующая игра: ${basketballData.nextGameRu}`, 'ru-RU');
 
@@ -366,7 +370,7 @@
                 await speakText('היום מנוחה, אין טיפולים', 'he-IL');
             }
             await speakText(`מחר עובד ${getWorkerSpeak(tomorrowWorker)}`, 'he-IL');
-            await speakText(`בני הרצליה: ${basketballData.position}`, 'he-IL');
+            if (basketballData.position) await speakText(`בני הרצליה: ${basketballData.position}`, 'he-IL');
             await speakText(basketballData.lastGame, 'he-IL');
             await speakText(`משחק הבא: ${basketballData.nextGame}`, 'he-IL');
 
