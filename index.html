@@ -240,7 +240,7 @@
                     };
                     const oppRu = (name) => { const n = (name || '').replace(/\s+/g, ' ').trim(); return teamRu[n] || n; };
                     const channelRu = (c) => c.replace(/ספורט/g, 'Спорт').replace(/פלוס/g, 'плюс').replace(/לייב/g, 'лайв')
-                        .replace(/גולד/g, 'голд').replace(/כאן/g, 'Кан').replace(/ערוץ/g, 'канал').replace(/וואן/g, 'ONE')
+                        .replace(/גולד/g, 'голд').replace(/מקס/g, 'макс').replace(/סטארס/g, 'старс').replace(/אתר/g, 'сайт').replace(/כאן/g, 'Кан').replace(/ערוץ/g, 'канал').replace(/וואן/g, 'ONE')
                         .replace(/שידור/g, 'трансляция');
                     const fmt = (g) => {
                         const [y, m, d] = g.date.split('-').map(Number);

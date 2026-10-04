@@ -18,13 +18,10 @@ OUT = pathlib.Path("data/shiddurim-broadcasts.json")
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
 PAGES = 4  # each page is ~20 posts
-TEAM_RE = re.compile(r"הרצליה")
-TIME_RE = re.compile(r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b")
-DATE_RE = re.compile(r"\b(\d{1,2})[./](\d{1,2})(?:[./](\d{2,4}))?\b")
-CHANNEL_RE = re.compile(
-    r"(ספורט\s?[1-5](?:\s?(?:\+|פלוס|לייב|גולד|HD))?|ספורט\s?(?:\+|פלוס|לייב|גולד)"
-    r"|כאן\s?11|ערוץ\s?\d{1,2}|וואן|ONE|5\s?LIVE|5\s?PLUS|5\s?GOLD|Sport\s?[1-5]|i24)",
-    re.I)
+TEAM_RE = re.compile(r"(?:בני|ב\.)\s*הרצליה")  # not "מכבי הרצליה" (football)
+# item header line, e.g. "⏰ 19:00  |  📺 ספורט 5 מקס"; the game is on the next line
+SLOT_RE = re.compile(r"((?:[01]?\d|2[0-3]):[0-5]\d)\s*\|\s*📺\s*(.+)")
+DATE_RE = re.compile(r"\((\d{1,2})[./](\d{1,2})\)")  # post header, e.g. "להיום (31/8)"
 IL_TZ = datetime.timezone(datetime.timedelta(hours=3))  # close enough for picking the day
 
 
@@ -52,37 +49,27 @@ def fetch_posts():
     return posts
 
 
-def explicit_date(text, posted):
+def post_date(text, posted):
+    """Date from the post header "(31/8)"; posts without one continue that day's list."""
     m = DATE_RE.search(text)
     if not m:
-        return None
+        return posted
     day, month = int(m.group(1)), int(m.group(2))
     year = posted.year + (1 if posted.month == 12 and month == 1 else 0)
     try:
         return datetime.date(year, month, day)
     except ValueError:
-        return None
+        return posted
 
 
 def entries_from(post):
-    """Yield (date|None, time, channel, line) for each line mentioning Herzliya.
-    The channel comes from the line itself or the nearest header line above it;
-    the date likewise (None = only the post date is known)."""
+    """Yield (date, time, channel, line) for each slot whose game mentions Bnei Herzliya."""
+    date = post_date(post["text"], post["date"])
     lines = [l.strip() for l in post["text"].split("\n") if l.strip()]
-    header_channel, header_date = None, None
-    for line in lines:
-        ch = CHANNEL_RE.search(line)
-        d = explicit_date(line, post["date"])
-        if not TEAM_RE.search(line):
-            if ch:
-                header_channel = ch.group(0)
-            if d:
-                header_date = d
-            continue
-        t = TIME_RE.search(line)
-        channel = ch.group(0) if ch else header_channel
-        if channel:
-            yield d or header_date, t.group(0) if t else "", " ".join(channel.split()), line
+    for slot, game in zip(lines, lines[1:]):
+        m = SLOT_RE.search(slot)
+        if m and TEAM_RE.search(game):
+            yield date, m.group(1), " ".join(m.group(2).split()), game
 
 
 def match(games, posts):
@@ -92,14 +79,7 @@ def match(games, posts):
             for g in games:
                 if g.get("played") or not g.get("date"):
                     continue
-                gdate = datetime.date.fromisoformat(g["date"])
-                if date:
-                    ok = date == gdate
-                else:
-                    # no date in the post: only trust it if posted on game day or the day before
-                    # and the kick-off time matches
-                    ok = 0 <= (gdate - post["date"]).days <= 1 and time and time == g.get("time")
-                if ok:
+                if date.isoformat() == g["date"]:  # at most one game a day
                     found[g["game_id"]] = {"date": g["date"], "time": g.get("time", ""),
                                            "opponent": g.get("opponent", ""), "channel": channel,
                                            "text": line, "post": f"https://t.me/{post['id']}"}
