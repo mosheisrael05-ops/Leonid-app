@@ -210,17 +210,48 @@
                 const r2 = await fetch('data/bhbasket-games.json?t=' + Date.now());
                 if (r2.ok) {
                     const games = ((await r2.json()).games || []).filter(g => g.date).sort((a, b) => a.date.localeCompare(b.date));
+                    let tg = {};
+                    try {
+                        const r3 = await fetch('data/shiddurim-broadcasts.json?t=' + Date.now());
+                        if (r3.ok) tg = (await r3.json()).broadcasts || {};
+                    } catch (e) {}
                     const now = new Date();
                     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
                     const compRu = { 'ליגת ווינר': 'Лига Виннер', 'ליגת האלופות': 'Лига чемпионов', 'גביע המדינה': 'Кубок Израиля' };
+                    const teamRu = {
+                        'מכבי ת"א': 'Маккаби Тель-Авив', 'מכבי תל אביב': 'Маккаби Тель-Авив',
+                        'הפועל ת"א': 'Апоэль Тель-Авив', 'הפועל תל אביב': 'Апоэль Тель-Авив',
+                        'הפועל י-ם': 'Апоэль Иерусалим', 'הפועל ירושלים': 'Апоэль Иерусалим',
+                        'הפועל חולון': 'Апоэль Холон',
+                        'הפועל ב"ש': 'Апоэль Беэр-Шева', 'הפועל באר שבע': 'Апоэль Беэр-Шева',
+                        'הפועל אילת': 'Апоэль Эйлат',
+                        'הפועל העמק': 'Апоэль ха-Эмек',
+                        'גליל עליון': 'Апоэль Галиль Эльон', 'הפועל גליל עליון': 'Апоэль Галиль Эльон',
+                        'מכבי רמת גן': 'Маккаби Рамат-Ган', 'מכבי עירוני רמת גן': 'Маккаби Рамат-Ган',
+                        'מכבי אשדוד': 'Маккаби Ашдод',
+                        'ראשון לציון': 'Маккаби Ришон ле-Цион', 'מכבי ראשון לציון': 'Маккаби Ришон ле-Цион',
+                        'נס ציונה': 'Ирони Нес-Циона', 'עירוני נס ציונה': 'Ирони Нес-Циона',
+                        'קריית אתא': 'Ирони Кирьят-Ата', 'עירוני קרית אתא': 'Ирони Кирьят-Ата',
+                        'מכבי רעננה': 'Маккаби Раанана',
+                        'אליצור נתניה': 'Элицур Нетания',
+                        'חובנטוד בדאלונה': 'Ховентуд Бадалона',
+                        'טלקום בון': 'Телеком Бонн',
+                        'פורטו': 'Порту'
+                    };
+                    const oppRu = (name) => { const n = (name || '').replace(/\s+/g, ' ').trim(); return teamRu[n] || n; };
+                    const channelRu = (c) => c.replace(/ספורט/g, 'Спорт').replace(/פלוס/g, 'плюс').replace(/לייב/g, 'лайв')
+                        .replace(/גולד/g, 'голд').replace(/מקס/g, 'макс').replace(/סטארס/g, 'старс').replace(/אתר/g, 'сайт').replace(/כאן/g, 'Кан').replace(/ערוץ/g, 'канал').replace(/וואן/g, 'ONE')
+                        .replace(/שידור/g, 'трансляция');
                     const fmt = (g) => {
                         const [y, m, d] = g.date.split('-').map(Number);
                         const dt = new Date(y, m - 1, d);
                         const home = g.home_away === 'בית';
-                        const tv = g.broadcast && g.broadcast !== 'שידור טרם נקבע' ? ` | ${g.broadcast}` : '';
+                        const bc = g.broadcast && g.broadcast !== 'שידור טרם נקבע' ? g.broadcast : (tg[g.game_id] || {}).channel || '';
+                        const tv = bc ? ` | ${bc}` : '';
+                        const tvRu = bc ? ` | ${channelRu(bc)}` : '';
                         return {
                             he: `${hebrewDays[dt.getDay()]} ${d} ב${hebrewMonths[m - 1]}, ${g.time} — ${home ? 'בבית' : 'בחוץ'} נגד ${g.opponent}${g.competition ? ' (' + g.competition + ')' : ''}${tv}`,
-                            ru: `${russianDays[dt.getDay()]}, ${d} ${russianMonths[m - 1]}, ${g.time} — ${home ? 'дома' : 'в гостях'} против ${g.opponent}${compRu[g.competition] ? ' (' + compRu[g.competition] + ')' : ''}${tv}`
+                            ru: `${russianDays[dt.getDay()]}, ${d} ${russianMonths[m - 1]}, ${g.time} — ${home ? 'дома' : 'в гостях'} против ${oppRu(g.opponent)}${compRu[g.competition] ? ' (' + compRu[g.competition] + ')' : ''}${tvRu}`
                         };
                     };
                     const next = games.find(g => !g.played && g.date >= today);

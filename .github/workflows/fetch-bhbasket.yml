@@ -24,15 +24,17 @@ jobs:
         run: pip install requests beautifulsoup4
       - name: Fetch games
         run: python scripts/fetch_bhbasket.py
+      - name: Fetch TV broadcasts (@Shiddurim, @sidorim)
+        run: python scripts/fetch_shiddurim.py
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/bhbasket-games.json 2>/dev/null || exit 0
+          for f in data/bhbasket-games.json data/shiddurim-broadcasts.json; do git add "$f" 2>/dev/null || true; done
           if git diff --cached --quiet; then
             echo "no changes"
             exit 0
           fi
-          git commit -m "Update bhbasket games data"
+          git commit -m "Update bhbasket games and broadcasts data"
           git pull --rebase
           git push
