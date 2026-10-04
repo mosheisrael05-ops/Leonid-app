@@ -17,33 +17,44 @@ GAMES = pathlib.Path("data/bhbasket-games.json")
 OUT = pathlib.Path("data/shiddurim-broadcasts.json")
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
-PAGES = 4  # each page is ~20 posts
+PAGES = 2  # each page is ~20 posts (about 10 days)
 TEAM_RE = re.compile(r"(?:בני|ב\.)\s*הרצליה")  # not "מכבי הרצליה" (football)
-# item header line, e.g. "⏰ 19:00  |  📺 ספורט 5 מקס"; the game is on the next line
-SLOT_RE = re.compile(r"((?:[01]?\d|2[0-3]):[0-5]\d)\s*\|\s*📺\s*(.+)")
+TV_RE = re.compile(r"📺\s*([^·|\n]+?)\s*(?:[·|].*)?$")  # channel name after 📺, up to "·" or "|"
+TIME_RE = re.compile(r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b")
 DATE_RE = re.compile(r"\((\d{1,2})[./](\d{1,2})\)")  # post header, e.g. "להיום (31/8)"
 IL_TZ = datetime.timezone(datetime.timedelta(hours=3))  # close enough for picking the day
 
 
+def get(url, **params):
+    r = requests.get(url, params=params or None, headers={"User-Agent": UA}, timeout=30)
+    r.raise_for_status()
+    return BeautifulSoup(r.text, "html.parser")
+
+
 def fetch_posts():
+    """Recent posts with their text. Newer posts are a type the channel preview page
+    doesn't render ("Please open Telegram to view this post"); for those the text is
+    read from the post's own page (og:description)."""
     posts, before = [], None
     for _ in range(PAGES):
-        r = requests.get(URL, params={"before": before} if before else None,
-                         headers={"User-Agent": UA}, timeout=30)
-        r.raise_for_status()
-        soup = BeautifulSoup(r.text, "html.parser")
+        soup = get(URL, **({"before": before} if before else {}))
         msgs = soup.select("div.tgme_widget_message[data-post]")
         if not msgs:
             break
         for m in msgs:
-            body = m.select_one("div.tgme_widget_message_text")
             t = m.select_one("time[datetime]")
-            if not body or not t:
+            if not t:
                 continue
-            for br in body.find_all("br"):
-                br.replace_with("\n")
+            body = m.select_one("div.tgme_widget_message_text")
+            if body:
+                for br in body.find_all("br"):
+                    br.replace_with("\n")
+                text = body.get_text()
+            else:
+                meta = get(f"https://t.me/{m['data-post']}").select_one('meta[property="og:description"]')
+                text = meta["content"] if meta else ""
             posted = datetime.datetime.fromisoformat(t["datetime"]).astimezone(IL_TZ).date()
-            posts.append({"id": m["data-post"], "date": posted, "text": body.get_text()})
+            posts.append({"id": m["data-post"], "date": posted, "text": text})
         ids = [int(m["data-post"].split("/")[-1]) for m in msgs]
         before = min(ids)
     return posts
@@ -63,13 +74,22 @@ def post_date(text, posted):
 
 
 def entries_from(post):
-    """Yield (date, time, channel, line) for each slot whose game mentions Bnei Herzliya."""
+    """Yield (date, time, channel, line) for each item whose game mentions Bnei Herzliya.
+    An item is two lines, a game line and a "📺 channel" line, in either order:
+      "⏰ 19:00  |  📺 ספורט 5 מקס" / "בני הרצליה - מכבי רמת גן"
+      "🏀 בני הרצליה - מכבי רמת גן" / "📺 ספורט 5 · החל ב-20:10"
+    """
     date = post_date(post["text"], post["date"])
     lines = [l.strip() for l in post["text"].split("\n") if l.strip()]
-    for slot, game in zip(lines, lines[1:]):
-        m = SLOT_RE.search(slot)
-        if m and TEAM_RE.search(game):
-            yield date, m.group(1), " ".join(m.group(2).split()), game
+    for i, line in enumerate(lines):
+        if not TEAM_RE.search(line) or "📺" in line:
+            continue
+        # old format: the slot line is above the game; new format: below it
+        tv = lines[i - 1] if i and "⏰" in lines[i - 1] else (lines[i + 1] if i + 1 < len(lines) else "")
+        m = TV_RE.search(tv)
+        if m:
+            t = TIME_RE.search(tv) or TIME_RE.search(line)
+            yield date, t.group(0) if t else "", " ".join(m.group(1).split()), line
 
 
 def match(games, posts):

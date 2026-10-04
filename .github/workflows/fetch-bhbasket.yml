@@ -26,8 +26,8 @@ jobs:
         run: python scripts/fetch_bhbasket.py
       - name: Fetch TV broadcasts (@Shiddurim)
         run: python scripts/fetch_shiddurim.py
-      - name: TEMP debug @Shiddurim
-        run: python scripts/debug_shiddurim.py || true
+        env:
+          SHIDDURIM_DUMP: data/shiddurim-raw.json  # TEMP: remove after checking the format
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
