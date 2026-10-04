@@ -1,13 +1,15 @@
-# TEMP: what is t.me/sidorim?
+# TEMP: can single @sidorim posts be read?
 import json, requests
 from bs4 import BeautifulSoup
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
-out = []
-for url in ["https://t.me/sidorim", "https://t.me/s/sidorim"]:
-    r = requests.get(url, headers={"User-Agent": UA}, timeout=30)
-    s = BeautifulSoup(r.text, "html.parser")
-    out.append({"url": url, "final": r.url, "status": r.status_code, "title": s.title.string if s.title else None,
-                "meta": {m.get("property") or m.get("name"): m.get("content") for m in s.find_all("meta") if m.get("content")},
-                "extra": [d.get_text(" ", strip=True) for d in s.select(".tgme_page_extra, .tgme_page_title, .tgme_page_description, .tgme_action_button_new, .tgme_channel_info_header_title")],
-                "n_msgs": len(s.select("div.tgme_widget_message"))})
+out = {}
+for n in [1, 10, 100, 300, 1000, 2000, 3000, 5000]:
+    for url in [f"https://t.me/sidorim/{n}", f"https://t.me/sidorim/{n}?embed=1"]:
+        r = requests.get(url, headers={"User-Agent": UA}, timeout=30)
+        s = BeautifulSoup(r.text, "html.parser")
+        d = s.select_one('meta[property="og:description"]')
+        t = s.select_one("time[datetime]")
+        body = s.select_one(".tgme_widget_message_text, .message_media_not_supported_label, .tgme_widget_message_error")
+        out[url] = {"desc": (d["content"][:200] if d else None), "time": t["datetime"] if t else None,
+                    "body": body.get_text(" ", strip=True)[:200] if body else None}
 open("data/sidorim-raw.json", "w").write(json.dumps(out, ensure_ascii=False, indent=1))
