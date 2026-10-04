@@ -12,7 +12,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-URL = "https://t.me/s/Shiddurim"
+URL = "https://t.me/s/" + os.environ.get("SHIDDURIM_CHANNEL", "Shiddurim")
 GAMES = pathlib.Path("data/bhbasket-games.json")
 OUT = pathlib.Path("data/shiddurim-broadcasts.json")
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
