@@ -18,9 +18,9 @@ jobs:
           python-version: "3.11"
       - name: Install Python deps
         run: pip install requests beautifulsoup4
-      - name: Run API updater if a key exists
+      - name: Fetch league standings (api-sports.io)
         env:
-          BASKETBALL_API_KEY: ${{ secrets.BASKETBALL_API_KEY }}
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: node scripts/update-basketball.js
       - name: Overlay broadcast channel from Telegram @sidorim
         run: python scripts/fetch_sidorim.py
@@ -30,4 +30,5 @@ jobs:
           git config user.email "actions@github.com"
           git add data/bnei-herzliya.json data/sidorim-herzliya.json data/bhbasket-games.json
           git commit -m "Auto update basketball data" || exit 0
+          git pull --rebase
           git push
