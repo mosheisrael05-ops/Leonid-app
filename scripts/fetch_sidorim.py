@@ -28,13 +28,15 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 SOURCES = [
     "https://t.me/s/sidorim",
     "https://tgstat.com/channel/@sidorim",
+    "https://syndication.twitter.com/srv/timeline-profile/screen-name/BHerzliya",
 ]
 TEAM_RE = re.compile(r"הרצליה")
 DATE_RE = re.compile(r"(\d{1,2})[./](\d{1,2})[./](\d{2,4})")
 TIME_RE = re.compile(r"\b([01]?\d|2[0-3]):([0-5]\d)\b")
 CHANNEL_RE = re.compile(
     r"(ספורט\s*5\s*\+|ספורט\s*5\s*לייב|ספורט\s*5\s*מקס|5\s*סטארס|"
-    r"ספורט\s*[1-5]|וואן|ONE|ערוץ\s*הספורט|ספורט\s*1\s*HD)",
+    r"ספורט\s*[1-5]|וואן|ONE|ערוץ\s*הספורט|ספורט\s*1\s*HD|"
+    r"ערוץ\s*56|5\s*Plus|5Plus)",
     re.I,
 )
 MSG_RE = re.compile(
@@ -134,7 +136,8 @@ def apply(hits):
             if h["date"] and h["date"] == g.get("date"):
                 match = h
                 break
-            if h["channel"] and g.get("opponent") and g["opponent"].split()[0] in h["snippet"]:
+            opp = g.get("opponent") or ""
+            if h["channel"] and opp and (opp.split()[0] in h["snippet"] or any(w in h["snippet"] for w in opp.split() if len(w) > 3)):
                 match = h
         if not match or not match["channel"]:
             continue
