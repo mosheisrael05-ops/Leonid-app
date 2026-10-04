@@ -27,7 +27,7 @@ jobs:
       - name: Fetch TV broadcasts (@Shiddurim)
         run: python scripts/fetch_shiddurim.py
       - name: TEMP look at @sidorim
-        run: SHIDDURIM_CHANNEL=sidorim SHIDDURIM_DUMP=data/sidorim-raw.json python scripts/fetch_shiddurim.py; git checkout -- data/shiddurim-broadcasts.json 2>/dev/null || true
+        run: python scripts/debug_sidorim.py || true
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
