@@ -1,0 +1,6 @@
+# TEMPORARY: skip every Netlify build. Each deploy costs credits and the automatic
+# data commits use up the monthly allowance. The app is moving to GitHub Pages;
+# delete this file together with the Netlify site.
+[build]
+  publish = "."
+  ignore = "exit 0"
