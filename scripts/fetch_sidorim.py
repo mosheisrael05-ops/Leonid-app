@@ -34,11 +34,40 @@ TEAM_RE = re.compile(r"הרצליה")
 DATE_RE = re.compile(r"(\d{1,2})[./](\d{1,2})[./](\d{2,4})")
 TIME_RE = re.compile(r"\b([01]?\d|2[0-3]):([0-5]\d)\b")
 CHANNEL_RE = re.compile(
-    r"(ספורט\s*5\s*\+|ספורט\s*5\s*לייב|ספורט\s*5\s*מקס|5\s*סטארס|"
-    r"ספורט\s*[1-5]|וואן|ONE|ערוץ\s*הספורט|ספורט\s*1\s*HD|"
-    r"ערוץ\s*56|5\s*Plus|5Plus)",
+    r"(ערוץ\s*(?:5[5-9]|60)|ספורט\s*5\s*\+|ספורט\s*5\s*לייב|ספורט\s*5\s*מקס|"
+    r"5\s*סטארס|5\s*לייב|5\s*גולד|5\s*פלוס|5Plus|5Live|5Stars|5Gold|5Max|"
+    r"ספורט\s*5|וואן|ONE|ערוץ\s*הספורט)",
     re.I,
 )
+CHANNEL_NAMES = {
+    "55": "ערוץ 55, ספורט 5",
+    "56": "ערוץ 56, 5Plus",
+    "57": "ערוץ 57, 5Gold",
+    "58": "ערוץ 58, 5Live",
+    "59": "ערוץ 59, 5Stars",
+    "60": "ערוץ 60, 5Max",
+}
+
+def normalize_channel(raw):
+    """Sport channels rotate: 55, 56 and 58 are the usual live ones."""
+    text = re.sub(r"\s+", " ", raw or "").strip()
+    num = re.search(r"ערוץ\s*(5[5-9]|60)", text)
+    if num:
+        return CHANNEL_NAMES[num.group(1)]
+    low = text.lower().replace(" ", "")
+    if "5plus" in low or "5+" in text or "פלוס" in text:
+        return CHANNEL_NAMES["56"]
+    if "5live" in low or "לייב" in text:
+        return CHANNEL_NAMES["58"]
+    if "5stars" in low or "סטארס" in text:
+        return CHANNEL_NAMES["59"]
+    if "5gold" in low or "גולד" in text:
+        return CHANNEL_NAMES["57"]
+    if "5max" in low or "מקס" in text:
+        return CHANNEL_NAMES["60"]
+    if re.search(r"ספורט\s*5", text):
+        return CHANNEL_NAMES["55"]
+    return text
 MSG_RE = re.compile(
     r'class="tgme_widget_message_text[^"]*"[^>]*>(.*?)</div>',
     re.S,
@@ -141,9 +170,7 @@ def apply(hits):
                 match = h
         if not match or not match["channel"]:
             continue
-        label = match["channel"]
-        if match["time"]:
-            label = f"{match['channel']} {match['time']}"
+        label = normalize_channel(match["channel"])
         if g.get("broadcast") in ("", "שידור טרם נקבע", None) or "sidorim" not in (g.get("broadcast_source") or ""):
             g["broadcast"] = label
             g["broadcast_source"] = "https://t.me/sidorim"
