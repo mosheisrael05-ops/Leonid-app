@@ -26,13 +26,11 @@ jobs:
         run: python scripts/fetch_bhbasket.py
       - name: Fetch TV broadcasts (@Shiddurim, @sidorim)
         run: python scripts/fetch_shiddurim.py
-        env:
-          SHIDDURIM_DUMP: data/sidorim-raw.json  # TEMP: remove after checking the format
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          for f in data/bhbasket-games.json data/shiddurim-broadcasts.json data/sidorim-raw.json; do git add "$f" 2>/dev/null || true; done
+          for f in data/bhbasket-games.json data/shiddurim-broadcasts.json; do git add "$f" 2>/dev/null || true; done
           if git diff --cached --quiet; then
             echo "no changes"
             exit 0

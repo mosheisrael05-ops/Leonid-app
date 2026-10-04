@@ -23,7 +23,8 @@ PAGES = 2  # each page is ~20 posts (about 10 days)
 TEAM_RE = re.compile(r"(?:בני|ב\.)\s*הרצליה")  # not "מכבי הרצליה" (football)
 TV_RE = re.compile(r"📺\s*([^·|\n]+?)\s*(?:[·|].*)?$")  # channel name after 📺, up to "·" or "|"
 TIME_RE = re.compile(r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b")
-DATE_RE = re.compile(r"\((\d{1,2})[./](\d{1,2})\)")  # post header, e.g. "להיום (31/8)"
+# post header date: "להיום (31/8)" (@Shiddurim), "יום ראשון • 04/10/26" (@sidorim)
+DATE_RE = re.compile(r"\((\d{1,2})[./](\d{1,2})\)|\b(\d{1,2})[./](\d{1,2})[./](\d{2}|\d{4})\b")
 IL_TZ = datetime.timezone(datetime.timedelta(hours=3))  # close enough for picking the day
 
 
@@ -100,12 +101,14 @@ def fetch_sidorim(last_id):
 
 
 def post_date(text, posted):
-    """Date from the post header "(31/8)"; posts without one continue that day's list."""
-    m = DATE_RE.search(text)
+    """Date from the post header; posts without one continue that day's list."""
+    m = DATE_RE.search("\n".join(text.split("\n")[:5]))
     if not m:
         return posted
-    day, month = int(m.group(1)), int(m.group(2))
+    day, month = int(m.group(1) or m.group(3)), int(m.group(2) or m.group(4))
     year = posted.year + (1 if posted.month == 12 and month == 1 else 0)
+    if m.group(5):
+        year = int(m.group(5)) % 100 + 2000
     try:
         return datetime.date(year, month, day)
     except ValueError:
@@ -114,7 +117,8 @@ def post_date(text, posted):
 
 def entries_from(post):
     """Yield (date, time, channel, line) for each item whose game mentions Bnei Herzliya.
-    An item is two lines, a game line and a "📺 channel" line, in either order:
+    @sidorim items are one line; @Shiddurim items are two lines, a game line and a
+    "📺 channel" line, in either order:
       "⏰ 19:00  |  📺 ספורט 5 מקס" / "בני הרצליה - מכבי רמת גן"
       "🏀 בני הרצליה - מכבי רמת גן" / "📺 ספורט 5 · החל ב-20:10"
     """
@@ -123,7 +127,12 @@ def entries_from(post):
     for i, line in enumerate(lines):
         if not TEAM_RE.search(line) or "📺" in line:
             continue
-        # old format: the slot line is above the game; new format: below it
+        # @sidorim: one line, "ספורט 5  19:00  כדורסל : בני הרצליה - מכבי רמת גן"
+        t = TIME_RE.search(line)
+        if t and line[:t.start()].strip():
+            yield date, t.group(0), " ".join(line[:t.start()].split()), line
+            continue
+        # @Shiddurim: the slot line is above the game (older posts) or below it
         tv = lines[i - 1] if i and "⏰" in lines[i - 1] else (lines[i + 1] if i + 1 < len(lines) else "")
         m = TV_RE.search(tv)
         if m:
