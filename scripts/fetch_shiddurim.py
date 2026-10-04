@@ -5,6 +5,7 @@ Entries are kept between runs (posts scroll off the channel); entries older than
 30 days are dropped. On failure exits 0 without touching the file."""
 import datetime
 import json
+import os
 import pathlib
 import re
 
@@ -117,6 +118,10 @@ def main():
         print(f"fetch failed: {e}")
         return
     print(f"read {len(posts)} posts")
+    dump = os.environ.get("SHIDDURIM_DUMP")
+    if dump:  # debugging aid: save the raw posts to inspect the channel's format
+        pathlib.Path(dump).write_text(json.dumps(
+            [{**p, "date": p["date"].isoformat()} for p in posts], ensure_ascii=False, indent=2), encoding="utf-8")
 
     try:
         old = json.loads(OUT.read_text(encoding="utf-8")).get("broadcasts", {})
