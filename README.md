@@ -12,11 +12,12 @@
 ```
 leonid-app/
 ├── index.html                        ← הקובץ הראשי
-├── netlify.toml                      ← הגדרות Netlify
-├── netlify/functions/
-│   └── get-basketball.js             ← פונקציה אוטומטית לכדורסל
-└── data/
-    └── (קבצי נתונים עתידיים)
+├── scripts/
+│   ├── fetch_bhbasket.py             ← משחקים מ-bhbasket.co.il
+│   ├── fetch_shiddurim.py            ← שידורי טלוויזיה מטלגרם (@Shiddurim, @sidorim)
+│   └── update-basketball.js          ← טבלה ותוצאות
+├── data/                             ← קבצי JSON שמתעדכנים אוטומטית
+└── .github/workflows/                ← הרצה אוטומטית (GitHub Actions)
 ```
 
 ## 📋 עדכון סידור עבודה חודשי:
@@ -25,11 +26,7 @@ leonid-app/
 3. חפש את `workSchedule`
 4. עדכן את התאריכים והשמות
 5. לחץ "Commit changes"
-6. Netlify מתעדכן אוטומטית!
 
 ## 🏀 כדורסל:
-הנתונים נשלפים אוטומטית מ-bhbasket.co.il דרך Netlify Function.
-אם הפונקציה לא עובדת - יש fallback עם נתונים ידניים.
-
-## 🔗 אתר חי:
-https://mellow-arithmetic-14863a.netlify.app
+GitHub Actions מריץ כל 6 שעות את הסקריפטים שבתיקיית `scripts/`, ושומר את הנתונים בתיקיית `data/`.
+אם אין נתונים - יש fallback עם נתונים ידניים ב-`index.html`.
