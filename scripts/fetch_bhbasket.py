@@ -121,6 +121,15 @@ def main():
         old = json.loads(OUT.read_text(encoding="utf-8")).get("games", [])
     except Exception:
         old = []
+    # The site often drops or never lists the TV channel; keep a channel set earlier
+    # (by hand or by fetch_sidorim.py) when the fresh scrape has none.
+    old_by_id = {g.get("game_id"): g for g in old}
+    for g in games:
+        prev = old_by_id.get(g["game_id"]) or {}
+        if g.get("broadcast") in ("", "שידור טרם נקבע") and prev.get("broadcast") not in (None, "", "שידור טרם נקבע"):
+            g["broadcast"] = prev["broadcast"]
+            if prev.get("broadcast_source"):
+                g["broadcast_source"] = prev["broadcast_source"]
     current_ids = {g["game_id"] for g in games}
     games += [g for g in old if g.get("played") and g.get("game_id") not in current_ids]
     games.sort(key=lambda g: g.get("date") or "9999")
