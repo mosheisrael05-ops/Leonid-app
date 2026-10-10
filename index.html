@@ -220,7 +220,7 @@
                     } catch (e) {}
                     const now = new Date();
                     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-                    const compRu = { 'ליגת ווינר': 'Лига Виннер', 'ליגת האלופות': 'Лига чемпионов', 'גביע המדינה': 'Кубок Израиля' };
+                    const compRu = { 'ליגת ווינר': 'Лига Виннер', 'גביע ווינר': 'Кубок Виннер', 'ליגת האלופות': 'Лига чемпионов', 'גביע המדינה': 'Кубок Израиля' };
                     const teamRu = {
                         'מכבי ת"א': 'Маккаби Тель-Авив', 'מכבי תל אביב': 'Маккаби Тель-Авив',
                         'הפועל ת"א': 'Апоэль Тель-Авив', 'הפועל תל אביב': 'Апоэль Тель-Авив',
@@ -252,9 +252,10 @@
                         const bc = g.broadcast && g.broadcast !== 'שידור טרם נקבע' ? g.broadcast : (tg[g.game_id] || {}).channel || '';
                         const tv = bc ? ` | ${bc}` : '';
                         const tvRu = bc ? ` | ${channelRu(bc)}` : '';
+                        const t = g.time ? `, ${g.time}` : '';
                         return {
-                            he: `${hebrewDays[dt.getDay()]} ${d} ב${hebrewMonths[m - 1]}, ${g.time} — ${home ? 'בבית' : 'בחוץ'} נגד ${g.opponent}${g.competition ? ' (' + g.competition + ')' : ''}${tv}`,
-                            ru: `${russianDays[dt.getDay()]}, ${d} ${russianMonths[m - 1]}, ${g.time} — ${home ? 'дома' : 'в гостях'} против ${oppRu(g.opponent)}${compRu[g.competition] ? ' (' + compRu[g.competition] + ')' : ''}${tvRu}`
+                            he: `${hebrewDays[dt.getDay()]} ${d} ב${hebrewMonths[m - 1]}${t} — ${home ? 'בבית' : 'בחוץ'} נגד ${g.opponent}${g.competition ? ' (' + g.competition + ')' : ''}${tv}`,
+                            ru: `${russianDays[dt.getDay()]}, ${d} ${russianMonths[m - 1]}${t} — ${home ? 'дома' : 'в гостях'} против ${oppRu(g.opponent)}${compRu[g.competition] ? ' (' + compRu[g.competition] + ')' : ''}${tvRu}`
                         };
                     };
                     const next = games.find(g => !g.played && g.date >= today);
@@ -262,8 +263,9 @@
                     if (next) { const f = fmt(next); basketballData.nextGame = f.he; basketballData.nextGameRu = f.ru; }
                     if (last) {
                         const f = fmt(last);
-                        basketballData.lastGame = `${f.he} | תוצאה ${last.score}`;
-                        basketballData.lastGameRu = `${f.ru} | счёт ${last.score}`;
+                        const res = { win: ['ניצחון', 'победа'], loss: ['הפסד', 'поражение'] }[last.result];
+                        basketballData.lastGame = `${f.he} | ${res ? res[0] : 'תוצאה'} ${last.score}`;
+                        basketballData.lastGameRu = `${f.ru} | ${res ? res[1] : 'счёт'} ${last.score}`;
                     }
                 }
             } catch (e) {
@@ -390,6 +392,9 @@
             speakAll();
         });
         setInterval(updateDisplay, 60000);
+        // The tablet stays open for days: refresh basketball data every 30 minutes and when the page is shown again.
+        setInterval(loadBasketballData, 30 * 60 * 1000);
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') loadBasketballData(); });
     </script>
 </body>
 </html>

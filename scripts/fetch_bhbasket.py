@@ -115,8 +115,9 @@ def main():
         print("no games parsed")
         return
 
-    # Keep previously scraped played games the site no longer lists, so the last result
-    # stays available until a newer game gets a final score.
+    # Keep earlier games the site no longer lists. The site drops a game once it is played,
+    # often before showing its score, so past games stay here (a score can then be filled
+    # in by hand) and the last result stays available until a newer game gets a final score.
     try:
         old = json.loads(OUT.read_text(encoding="utf-8")).get("games", [])
     except Exception:
@@ -131,7 +132,9 @@ def main():
             if prev.get("broadcast_source"):
                 g["broadcast_source"] = prev["broadcast_source"]
     current_ids = {g["game_id"] for g in games}
-    games += [g for g in old if g.get("played") and g.get("game_id") not in current_ids]
+    today = datetime.date.today().isoformat()
+    games += [g for g in old if g.get("game_id") not in current_ids
+              and (g.get("played") or (g.get("date") or "9999") < today)]
     games.sort(key=lambda g: g.get("date") or "9999")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
