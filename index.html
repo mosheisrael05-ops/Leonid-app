@@ -245,13 +245,13 @@
                     const channelRu = (c) => c.replace(/ספורט/g, 'Спорт').replace(/פלוס/g, 'плюс').replace(/לייב/g, 'лайв')
                         .replace(/גולד/g, 'голд').replace(/מקס/g, 'макс').replace(/סטארס/g, 'старс').replace(/אתר/g, 'сайт').replace(/כאן/g, 'Кан').replace(/ערוץ/g, 'канал').replace(/וואן/g, 'ONE')
                         .replace(/שידור/g, 'трансляция');
-                    const fmt = (g) => {
+                    const fmt = (g, withTv = true) => {
                         const [y, m, d] = g.date.split('-').map(Number);
                         const dt = new Date(y, m - 1, d);
                         const home = g.home_away === 'בית';
                         const bc = g.broadcast && g.broadcast !== 'שידור טרם נקבע' ? g.broadcast : (tg[g.game_id] || {}).channel || '';
-                        const tv = bc ? ` | ${bc}` : '';
-                        const tvRu = bc ? ` | ${channelRu(bc)}` : '';
+                        const tv = bc && withTv ? ` | ${bc}` : '';
+                        const tvRu = bc && withTv ? ` | ${channelRu(bc)}` : '';
                         const t = g.time ? `, ${g.time}` : '';
                         return {
                             he: `${hebrewDays[dt.getDay()]} ${d} ב${hebrewMonths[m - 1]}${t} — ${home ? 'בבית' : 'בחוץ'} נגד ${g.opponent}${g.competition ? ' (' + g.competition + ')' : ''}${tv}`,
@@ -262,10 +262,11 @@
                     const last = [...games].reverse().find(g => g.played && g.date <= today);
                     if (next) { const f = fmt(next); basketballData.nextGame = f.he; basketballData.nextGameRu = f.ru; }
                     if (last) {
-                        const f = fmt(last);
-                        const res = { win: ['ניצחון', 'победа'], loss: ['הפסד', 'поражение'] }[last.result];
-                        basketballData.lastGame = `${f.he} | ${res ? res[0] : 'תוצאה'} ${last.score}`;
-                        basketballData.lastGameRu = `${f.ru} | ${res ? res[1] : 'счёт'} ${last.score}`;
+                        // Result first; the TV channel no longer matters once the game is over.
+                        const f = fmt(last, false);
+                        const res = { win: ['ניצחון', 'Победа'], loss: ['הפסד', 'Поражение'] }[last.result];
+                        basketballData.lastGame = `${res ? res[0] : 'תוצאה'} ${last.score} — ${f.he}`;
+                        basketballData.lastGameRu = `${res ? res[1] : 'Счёт'} ${last.score} — ${f.ru}`;
                     }
                 }
             } catch (e) {
