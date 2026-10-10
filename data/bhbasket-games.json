@@ -3,6 +3,47 @@
   "source": "https://bhbasket.co.il/games.asp",
   "games": [
     {
+      "game_id": "cup-2026-09-25",
+      "date": "2026-09-25",
+      "date_text": "25 בספטמבר",
+      "time": "",
+      "competition": "גביע ווינר",
+      "home_away": "חוץ",
+      "score": "68:88",
+      "result": "loss",
+      "broadcast": "",
+      "opponent": "הפועל י-ם",
+      "played": true,
+      "teams": [
+        "גביע ווינר",
+        "הפועל ירושלים",
+        "בני הרצליה"
+      ],
+      "raw_text": "added by hand: Winner Cup quarter-final at Hadera, Hapoel Jerusalem 88 - Bnei Herzliya 68",
+      "score_source": "https://www.haaretz.co.il/sport/basketball/2026-09-25/ty-article/000001a0-d89e-d9ab-abfd-ffbfa2c40000"
+    },
+    {
+      "game_id": "9951",
+      "date": "2026-10-06",
+      "date_text": "6 באוקטובר",
+      "time": "21:00",
+      "competition": "ליגת האלופות",
+      "home_away": "חוץ",
+      "score": "75:86",
+      "result": "loss",
+      "broadcast": "ערוץ 56, 5Plus",
+      "opponent": "חובנטוד בדאלונה",
+      "played": true,
+      "teams": [
+        "צ'מפיונס",
+        "חובנטוד בדאלונה",
+        "בני הרצליה"
+      ],
+      "raw_text": "6 באוקטובר, שלישי 21:00 צ'מפיונס בדאלונה משחק חוץ חובנטוד בדאלונה נגד בני הרצליה; final added by hand: Joventut 86 - Bnei Herzliya 75",
+      "broadcast_source": "https://x.com/BHerzliya",
+      "score_source": "https://www.infobae.com/espana/agencias/2026/10/06/86-75-el-asisa-joventut-arranca-la-liga-de-campeones-con-triunfo-ante-el-herzliya/"
+    },
+    {
       "game_id": "26650",
       "date": "2026-10-12",
       "date_text": "12 באוקטובר",
