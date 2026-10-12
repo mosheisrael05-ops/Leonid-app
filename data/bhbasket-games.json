@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12T13:56:30.401565+00:00",
+  "updated": "2026-10-12T23:58:08.448216+00:00",
   "source": "https://bhbasket.co.il/games.asp",
   "games": [
     {
@@ -42,24 +42,6 @@
       "raw_text": "6 באוקטובר, שלישי 21:00 צ'מפיונס בדאלונה משחק חוץ חובנטוד בדאלונה נגד בני הרצליה; final added by hand: Joventut 86 - Bnei Herzliya 75",
       "broadcast_source": "https://x.com/BHerzliya",
       "score_source": "https://www.infobae.com/espana/agencias/2026/10/06/86-75-el-asisa-joventut-arranca-la-liga-de-campeones-con-triunfo-ante-el-herzliya/"
-    },
-    {
-      "game_id": "26650",
-      "date": "2026-10-12",
-      "date_text": "12 באוקטובר",
-      "time": "20:10",
-      "competition": "ליגת ווינר",
-      "home_away": "בית",
-      "score": "0:0",
-      "broadcast": "",
-      "opponent": "מכבי רמת גן",
-      "played": false,
-      "teams": [
-        "ליגת Winner סל, מחזור 1",
-        "בני הרצליה",
-        "מכבי רמת גן"
-      ],
-      "raw_text": "12 באוקטובר, שני 20:10 ליגת Winner סל, מחזור 1 היובל, הרצליה משחק בית 5GOLD + משולב (56) בני הרצליה נגד מכבי רמת גן 0:0"
     },
     {
       "game_id": "26656",
@@ -602,5 +584,5 @@
       "raw_text": "2 במאי, ראשון (לא סופי) ליגת Winner סל, מחזור 26 משחק חוץ ראשון לציון נגד בני הרצליה 0:0"
     }
   ],
-  "broadcast_updated": "2026-10-12T13:56:31.667467+00:00"
+  "broadcast_updated": "2026-10-12T23:58:10.372079+00:00"
 }
