@@ -3,13 +3,10 @@ import json, re, requests
 from bs4 import BeautifulSoup
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 urls = [
-    "https://bhbasket.co.il/", "https://bhbasket.co.il/games.asp",
-    "https://bhbasket.co.il/game.asp?GameId=26650",
-    "https://ibasketball.co.il/", "https://ibasketball.co.il/league/2026-2/",
-    "https://basket.co.il/", "https://www.basket.co.il/",
-    "https://www.sport5.co.il/liga.aspx?FolderID=407", "https://www.one.co.il/Basketball/",
-    "https://www.flashscore.co.il/basketball/israel/super-league/standings/",
-    "https://www.sofascore.com/api/v1/team/3466/events/last/0",
+    "https://basket.co.il/table.asp?cYear=2027", "https://bhbasket.co.il/table.asp",
+    "https://bhbasket.co.il/game-zone.asp?GameId=26650&cYear=2027&gt=5",
+    "https://basket.co.il/game-zone.asp?GameId=26650&cYear=2027&gt=5",
+    "https://basket.co.il/more-games.asp?cYear=2027&my-list=3",
 ]
 out = []
 for u in urls:
@@ -26,8 +23,9 @@ for u in urls:
         i = txt.find("הרצליה")
         rec["herzliya"] = txt[max(0, i - 300):i + 500] if i >= 0 else None
         rec["tables"] = len(s.find_all("table"))
-        if "game.asp" in u or "sofascore" in u:
-            rec["text"] = txt[:3000]
+        rec["text"] = txt[:4000]
+        rec["rows"] = [[c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])] for t in s.find_all("table") for tr in t.find_all("tr")][:60]
+        rec["html_sample"] = r.text[r.text.find("הרצליה") - 1500: r.text.find("הרצליה") + 1500] if "הרצליה" in r.text else ""
     except Exception as e:
         rec["error"] = str(e)[:200]
     out.append(rec)
