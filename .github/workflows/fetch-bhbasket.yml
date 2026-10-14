@@ -26,11 +26,13 @@ jobs:
         run: python scripts/fetch_bhbasket.py
       - name: Fetch broadcast channel from Telegram @sidorim
         run: python scripts/fetch_sidorim.py
+      - name: TEMP discover sources
+        run: python scripts/discover_sources.py || true
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/bhbasket-games.json data/sidorim-herzliya.json data/bnei-herzliya.json 2>/dev/null || exit 0
+          git add data/discovery.json 2>/dev/null || exit 0
           if git diff --cached --quiet; then
             echo "no changes"
             exit 0
