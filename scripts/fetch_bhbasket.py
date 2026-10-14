@@ -1,6 +1,8 @@
  #!/usr/bin/env python3
-"""Fetch Bnei Herzliya games from bhbasket.co.il -> data/bhbasket-games.json.
-On failure (network error or zero games) exits 0 without touching the file."""
+"""Fetch Bnei Herzliya games from bhbasket.co.il -> data/bhbasket-games.json, the final
+score of played games from each game's page, and the league table position ->
+data/bnei-herzliya.json ("standing"). No API key needed.
+On failure (network error or zero games) exits 0 without touching the files."""
 import datetime
 import json
 import pathlib
@@ -9,8 +11,10 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-URL = "https://bhbasket.co.il/games.asp"
+SITE = "https://bhbasket.co.il/"
+URL = SITE + "games.asp"
 OUT = pathlib.Path("data/bhbasket-games.json")
+CARD = pathlib.Path("data/bnei-herzliya.json")
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
 ID_RE = re.compile(r"GameId=(\d+)", re.I)
@@ -84,6 +88,54 @@ def parse(text):
     }
 
 
+def get_soup(url):
+    r = requests.get(url, headers={"User-Agent": UA, "Accept-Language": "he-IL,he;q=0.9"}, timeout=30)
+    r.raise_for_status()
+    r.encoding = r.apparent_encoding or "utf-8"
+    return BeautifulSoup(r.text, "html.parser")
+
+
+def rows(soup):
+    return [[" ".join(c.get_text(" ", strip=True).split()) for c in tr.find_all(["td", "th"])]
+            for tr in soup.find_all("tr")]
+
+
+def final_score(gid):
+    """(ours, theirs) from the game page's "סיום רבע" table, or None before the game ends."""
+    found, ours, theirs = False, None, None
+    for row in rows(get_soup(f"{SITE}game-zone.asp?GameId={gid}")):
+        if row and row[0] == "סיום רבע":
+            found = True
+            continue
+        if found:
+            nums = [int(c) for c in row[1:] if c.isdigit()]
+            if not row or len(nums) < 4:  # all four quarters, or the game isn't over
+                break
+            if TEAM.split()[-1] in row[0]:
+                ours = nums[-1]
+            else:
+                theirs = nums[-1]
+            if ours is not None and theirs is not None:
+                break
+    if ours and theirs:
+        return ours, theirs
+    return None
+
+
+def fetch_standing():
+    """Bnei Herzliya's row in the Winner league table of the current season."""
+    table = [r for r in rows(get_soup(f"{SITE}table.asp?cYear={season_start_year() + 1}"))
+             if len(r) >= 6 and r[0].isdigit() and r[2].isdigit()]
+    row = next((r for r in table if TEAM.split()[-1] in r[1]), None)
+    if not row:
+        return None
+    games, wins, losses = int(row[3]), int(row[4]), int(row[5])
+    if not games:
+        return None  # season hasn't started
+    return {"position": int(row[0]), "total": len(table), "wins": wins, "losses": losses,
+            "source": f"{SITE}table.asp", "updated": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+
+
 def main():
     try:
         r = requests.get(URL, headers={"User-Agent": UA, "Accept-Language": "he-IL,he;q=0.9"}, timeout=30)
@@ -134,13 +186,49 @@ def main():
     current_ids = {g["game_id"] for g in games}
     today = datetime.date.today().isoformat()
     games += [g for g in old if g.get("game_id") not in current_ids
-              and (g.get("played") or (g.get("date") or "9999") < today)]
+              and (g.get("played") or (g.get("date") or "9999") <= today)]
     games.sort(key=lambda g: g.get("date") or "9999")
+
+    # Final score and win/loss from the game's own page, once per game.
+    for g in games:
+        if g.get("result") or (g.get("date") or "9999") > today:
+            continue
+        if g["date"] == today and g.get("time"):
+            # Israel time; the page shows running totals until the game ends
+            now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=3)))
+            if now.strftime("%H:%M") < f"{int(g['time'][:2]) + 3:02d}{g['time'][2:]}":
+                continue
+        try:
+            score = final_score(g["game_id"])
+        except Exception as e:
+            print(f"game {g['game_id']}: score fetch failed: {e}")
+            continue
+        if score:
+            g["score"] = f"{score[0]}:{score[1]}"  # ours:theirs
+            g["result"] = "win" if score[0] > score[1] else "loss"
+            g["played"] = True
+            print(f"{g['date']} {g.get('opponent')}: {g['result']} {g['score']}")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     data ={"updated": datetime.datetime.now(datetime.timezone.utc).isoformat(), "source": URL, "games": games}
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"saved {len(games)} games")
+
+    try:
+        standing = fetch_standing()
+    except Exception as e:
+        print(f"standings fetch failed: {e}")
+        standing = None
+    if standing:
+        try:
+            card = json.loads(CARD.read_text(encoding="utf-8"))
+        except Exception:
+            card = {}
+        card["standing"] = standing
+        CARD.write_text(json.dumps(card, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"standing: {standing['position']}/{standing['total']} ({standing['wins']}-{standing['losses']})")
+    else:
+        print("no standing for this season yet")
 
 
 if __name__ == "__main__":

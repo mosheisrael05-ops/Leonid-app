@@ -44,6 +44,24 @@
       "score_source": "https://www.infobae.com/espana/agencias/2026/10/06/86-75-el-asisa-joventut-arranca-la-liga-de-campeones-con-triunfo-ante-el-herzliya/"
     },
     {
+      "game_id": "26650",
+      "date": "2026-10-12",
+      "date_text": "12 באוקטובר",
+      "time": "20:10",
+      "competition": "ליגת ווינר",
+      "home_away": "בית",
+      "score": "0:0",
+      "broadcast": "",
+      "opponent": "מכבי רמת גן",
+      "played": false,
+      "teams": [
+        "ליגת Winner סל, מחזור 1",
+        "בני הרצליה",
+        "מכבי רמת גן"
+      ],
+      "raw_text": "12 באוקטובר, שני 20:10 ליגת Winner סל, מחזור 1 היובל, הרצליה משחק בית 5GOLD + משולב (56) בני הרצליה נגד מכבי רמת גן 0:0"
+    },
+    {
       "game_id": "26656",
       "date": "2026-10-18",
       "date_text": "18 באוקטובר",
