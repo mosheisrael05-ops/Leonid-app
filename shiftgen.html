@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>מחולל סידור עבודה</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Assistant', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; min-height: 100vh; padding: 16px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #ffd93d; font-size: clamp(24px, 6vw, 36px); margin: 10px 0 4px; }
+        .sub { color: #95e1d3; margin-bottom: 16px; }
+        .card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 18px; padding: 18px; margin: 16px 0; }
+        .card h2 { color: #4ecdc4; font-size: 20px; margin-bottom: 12px; }
+        label { font-weight: 700; }
+        input, select, textarea, button { font-family: inherit; font-size: 16px; }
+        input[type=text], input[type=number], input[type=month], select { background: rgba(0,0,0,0.25); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 6px 8px; }
+        input[type=number] { width: 64px; }
+        .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .worker { border-top: 1px solid rgba(255,255,255,0.12); padding: 12px 0; }
+        .worker:first-of-type { border-top: none; }
+        .worker .name { width: 90px; }
+        .days { display: flex; flex-wrap: wrap; gap: 4px; }
+        .days label { font-weight: 400; background: rgba(255,255,255,0.06); border-radius: 6px; padding: 2px 6px; cursor: pointer; }
+        .hint { color: #95e1d3; font-size: 14px; }
+        button { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: #fff; border: none; border-radius: 12px; padding: 10px 18px; font-weight: 800; cursor: pointer; }
+        button.secondary { background: rgba(255,255,255,0.15); }
+        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .cal .hd { text-align: center; color: #ffd93d; font-weight: 700; font-size: 14px; }
+        .cal .day { background: rgba(255,255,255,0.06); border-radius: 8px; padding: 4px; min-height: 58px; }
+        .cal .day.empty { background: none; }
+        .cal .day.warn { outline: 2px solid #ff6b6b; }
+        .cal .num { font-size: 13px; color: #95e1d3; }
+        .cal select { width: 100%; padding: 2px; font-size: 14px; -webkit-appearance: none; appearance: none; text-align: center; }
+        table.stats { border-collapse: collapse; margin-top: 8px; }
+        table.stats td, table.stats th { padding: 4px 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.12); }
+        textarea { width: 100%; min-height: 220px; background: rgba(0,0,0,0.35); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 8px; direction: ltr; text-align: left; font-family: monospace; font-size: 13px; }
+        .warnings { color: #ff6b6b; margin-top: 8px; }
+        a { color: #4ecdc4; }
+        @media (max-width: 560px) { .cal { gap: 2px; } .cal .day { min-height: 50px; padding: 2px; } .cal select { font-size: 12px; padding: 2px 0; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📅 מחולל סידור עבודה (Shiftgen)</h1>
+    <div class="sub">יוצר סידור חודשי מאוזן ומדביק אותו ל-<code>workSchedule</code> ב-index.html · <a href="index.html">חזרה לאפליקציה</a></div>
+
+    <div class="card">
+        <h2>1. חודש</h2>
+        <div class="row">
+            <label for="month">חודש:</label>
+            <input type="month" id="month">
+            <span class="hint" id="prevInfo"></span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>2. עובדים וכללים</h2>
+        <div class="hint">ימים קבועים — העובד משובץ תמיד בימים אלה. ימים חסומים — מספרי ימים בחודש, למשל <code>3, 10-12</code>. מקסימום 0 = ללא הגבלה.</div>
+        <div id="workers"></div>
+        <div class="row" style="margin-top:10px">
+            <input type="text" id="newName" placeholder="שם עובד חדש">
+            <button class="secondary" id="addWorker">➕ הוסף עובד</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <button id="generate">⚙️ צור סידור</button>
+        <button class="secondary" id="reshuffle">🔀 ערבב מחדש</button>
+    </div>
+
+    <div class="card" id="resultCard" style="display:none">
+        <h2>3. סידור (אפשר לשנות כל יום ידנית)</h2>
+        <div class="cal" id="cal"></div>
+        <div class="warnings" id="warnings"></div>
+        <table class="stats" id="stats"></table>
+    </div>
+
+    <div class="card" id="outCard" style="display:none">
+        <h2>4. קוד להדבקה</h2>
+        <div class="hint">ב-index.html, הדבק לפני השורה <code>};</code> שסוגרת את <code>workSchedule</code>, ווודא שבסוף השורה שלפני יש פסיק.</div>
+        <textarea id="output" dir="ltr" wrap="off" readonly></textarea>
+        <div class="row" style="margin-top:8px"><button id="copy">📋 העתק</button><span class="hint" id="copied"></span></div>
+    </div>
+</div>
+
+<script>
+    const DAYS = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
+    const MONTHS = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+    const STORE_KEY = 'shiftgen-workers-v1';
+
+    // Defaults follow the existing schedule: מטי on Sundays, סטס on Thursdays, the rest rotate.
+    const DEFAULT_WORKERS = [
+        { name: 'מטי', fixed: [0], blocked: '', max: 0, rotate: false },
+        { name: 'סטס', fixed: [4], blocked: '', max: 0, rotate: false },
+        { name: 'גומן', fixed: [], blocked: '', max: 0, rotate: true },
+        { name: 'משה', fixed: [], blocked: '', max: 0, rotate: true },
+        { name: 'נתי', fixed: [], blocked: '', max: 0, rotate: true }
+    ];
+
+    let workers = loadWorkers();
+    let existing = {};   // workSchedule parsed from index.html (if reachable)
+    let schedule = {};   // day number -> name
+    let seed = 1;
+
+    function loadWorkers() {
+        try { const s = JSON.parse(localStorage.getItem(STORE_KEY)); if (Array.isArray(s) && s.length) return s; } catch (e) {}
+        return JSON.parse(JSON.stringify(DEFAULT_WORKERS));
+    }
+    function saveWorkers() { try { localStorage.setItem(STORE_KEY, JSON.stringify(workers)); } catch (e) {} }
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function key(y, m, d) { return `${y}-${pad(m)}-${pad(d)}`; }
+    function selectedMonth() { const [y, m] = document.getElementById('month').value.split('-').map(Number); return { y, m }; }
+    function daysIn(y, m) { return new Date(y, m, 0).getDate(); }
+
+    function parseBlocked(text, max) {
+        const set = new Set();
+        (text || '').split(/[,\s]+/).forEach(part => {
+            const r = part.match(/^(\d+)(?:-(\d+))?$/);
+            if (!r) return;
+            const a = +r[1], b = r[2] ? +r[2] : a;
+            for (let d = Math.min(a, b); d <= Math.max(a, b); d++) if (d >= 1 && d <= max) set.add(d);
+        });
+        return set;
+    }
+
+    function rng() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+
+    function renderWorkers() {
+        const el = document.getElementById('workers');
+        el.innerHTML = '';
+        workers.forEach((w, i) => {
+            const div = document.createElement('div');
+            div.className = 'worker';
+            div.innerHTML = `
+                <div class="row">
+                    <input type="text" class="name" value="${w.name}" data-f="name">
+                    <label><input type="checkbox" data-f="rotate" ${w.rotate ? 'checked' : ''}> ברוטציה</label>
+                    <label>מקס׳ <input type="number" min="0" value="${w.max}" data-f="max"></label>
+                    <button class="secondary" data-f="remove">🗑️</button>
+                </div>
+                <div class="row" style="margin-top:6px">
+                    <span>ימים קבועים:</span>
+                    <div class="days">${DAYS.map((d, n) => `<label><input type="checkbox" data-day="${n}" ${w.fixed.includes(n) ? 'checked' : ''}> ${d}</label>`).join('')}</div>
+                </div>
+                <div class="row" style="margin-top:6px">
+                    <span>ימים חסומים:</span>
+                    <input type="text" value="${w.blocked}" data-f="blocked" placeholder="למשל 3, 10-12">
+                </div>`;
+            div.addEventListener('input', e => {
+                const f = e.target.dataset.f, day = e.target.dataset.day;
+                if (day !== undefined) {
+                    w.fixed = e.target.checked ? [...new Set([...w.fixed, +day])] : w.fixed.filter(x => x !== +day);
+                } else if (f === 'rotate') w.rotate = e.target.checked;
+                else if (f === 'max') w.max = Math.max(0, +e.target.value || 0);
+                else if (f) w[f] = e.target.value.trim();
+                saveWorkers();
+            });
+            div.querySelector('[data-f=remove]').addEventListener('click', () => { workers.splice(i, 1); saveWorkers(); renderWorkers(); });
+            el.appendChild(div);
+        });
+    }
+
+    function prevMonthLastWorker(y, m) {
+        const d = new Date(y, m - 1, 0);
+        return existing[key(d.getFullYear(), d.getMonth() + 1, d.getDate())] || null;
+    }
+
+    function generate() {
+        const { y, m } = selectedMonth();
+        const n = daysIn(y, m);
+        const blocked = Object.fromEntries(workers.map(w => [w.name, parseBlocked(w.blocked, n)]));
+        const count = Object.fromEntries(workers.map(w => [w.name, 0]));
+        const last = Object.fromEntries(workers.map(w => [w.name, -99]));
+        const prev = prevMonthLastWorker(y, m);
+        if (prev && prev in last) last[prev] = 0;
+        const canWork = (w, d) => !blocked[w.name].has(d) && (!w.max || count[w.name] < w.max);
+        schedule = {};
+
+        // Pass 1: fixed weekdays.
+        for (let d = 1; d <= n; d++) {
+            const wd = new Date(y, m - 1, d).getDay();
+            const w = workers.find(w => w.fixed.includes(wd) && canWork(w, d));
+            if (w) { schedule[d] = w.name; count[w.name]++; }
+        }
+        // Pass 2: fill the rest — fewest shifts first, avoid back-to-back days.
+        for (let d = 1; d <= n; d++) {
+            if (schedule[d]) continue;
+            const neighbours = [schedule[d - 1] || (d === 1 ? prev : null), schedule[d + 1]];
+            const pick = pool => pool
+                .map(w => ({ w, r: rng() }))
+                .sort((a, b) => count[a.w.name] - count[b.w.name] || last[a.w.name] - last[b.w.name] || a.r - b.r)[0];
+            const avail = workers.filter(w => canWork(w, d));
+            const choice =
+                pick(avail.filter(w => w.rotate && !neighbours.includes(w.name))) ||
+                pick(avail.filter(w => !neighbours.includes(w.name))) ||
+                pick(avail);
+            if (choice) { schedule[d] = choice.w.name; count[choice.w.name]++; last[choice.w.name] = d; }
+        }
+        renderResult();
+    }
+
+    function renderResult() {
+        const { y, m } = selectedMonth();
+        const n = daysIn(y, m);
+        const cal = document.getElementById('cal');
+        const prev = prevMonthLastWorker(y, m);
+        cal.innerHTML = DAYS.map(d => `<div class="hd">${d}</div>`).join('');
+        const first = new Date(y, m - 1, 1).getDay();
+        for (let i = 0; i < first; i++) cal.insertAdjacentHTML('beforeend', '<div class="day empty"></div>');
+        const names = workers.map(w => w.name);
+        const warnings = [];
+        for (let d = 1; d <= n; d++) {
+            const name = schedule[d] || '';
+            const before = d === 1 ? prev : schedule[d - 1];
+            const backToBack = name && name === before;
+            if (!name) warnings.push(`יום ${d}: אין עובד זמין`);
+            else if (backToBack) warnings.push(`יום ${d}: ${name} עובד/ת יומיים ברצף`);
+            const opts = ['', ...new Set([...names, name].filter(Boolean))]
+                .map(o => `<option ${o === name ? 'selected' : ''}>${o}</option>`).join('');
+            cal.insertAdjacentHTML('beforeend', `<div class="day ${!name || backToBack ? 'warn' : ''}"><div class="num">${d}</div><select data-d="${d}">${opts}</select></div>`);
+        }
+        cal.querySelectorAll('select').forEach(s => s.addEventListener('change', () => { schedule[+s.dataset.d] = s.value; renderResult(); }));
+        document.getElementById('warnings').innerHTML = warnings.join('<br>');
+
+        const count = {};
+        Object.values(schedule).forEach(v => { if (v) count[v] = (count[v] || 0) + 1; });
+        document.getElementById('stats').innerHTML =
+            '<tr><th>עובד</th><th>משמרות</th></tr>' +
+            Object.keys(count).map(k => `<tr><td>${k}</td><td>${count[k]}</td></tr>`).join('');
+
+        document.getElementById('resultCard').style.display = '';
+        document.getElementById('outCard').style.display = '';
+        document.getElementById('output').value = buildSnippet(y, m, n);
+    }
+
+    function buildSnippet(y, m, n) {
+        const entries = [];
+        for (let d = 1; d <= n; d++) if (schedule[d]) entries.push(`'${key(y, m, d)}': '${schedule[d]}'`);
+        const lines = [];
+        for (let i = 0; i < entries.length; i += 4) lines.push('            ' + entries.slice(i, i + 4).join(', ') + ',');
+        return `            // ${MONTHS[m - 1]} ${y}\n` + lines.join('\n');
+    }
+
+    async function loadExisting() {
+        try {
+            const html = await (await fetch('index.html', { cache: 'no-store' })).text();
+            const body = html.match(/const workSchedule = \{([\s\S]*?)\};/);
+            if (body) for (const r of body[1].matchAll(/'(\d{4}-\d{2}-\d{2})':\s*'([^']*)'/g)) existing[r[1]] = r[2];
+        } catch (e) {}
+        updatePrevInfo();
+    }
+
+    function updatePrevInfo() {
+        const { y, m } = selectedMonth();
+        const prev = prevMonthLastWorker(y, m);
+        const already = Object.keys(existing).some(k => k.startsWith(`${y}-${pad(m)}-`));
+        document.getElementById('prevInfo').textContent =
+            (prev ? `יום אחרון בחודש הקודם: ${prev}. ` : '') +
+            (already ? '⚠️ לחודש הזה כבר יש סידור ב-index.html' : '');
+    }
+
+    // Default to next month.
+    const now = new Date();
+    const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    document.getElementById('month').value = `${next.getFullYear()}-${pad(next.getMonth() + 1)}`;
+    document.getElementById('month').addEventListener('change', () => { updatePrevInfo(); document.getElementById('resultCard').style.display = 'none'; document.getElementById('outCard').style.display = 'none'; });
+    document.getElementById('addWorker').addEventListener('click', () => {
+        const name = document.getElementById('newName').value.trim();
+        if (!name || workers.some(w => w.name === name)) return;
+        workers.push({ name, fixed: [], blocked: '', max: 0, rotate: true });
+        document.getElementById('newName').value = '';
+        saveWorkers(); renderWorkers();
+    });
+    document.getElementById('generate').addEventListener('click', () => { seed = 1; generate(); });
+    document.getElementById('reshuffle').addEventListener('click', () => { seed = Math.floor(Math.random() * 2147483647) + 1; generate(); });
+    document.getElementById('copy').addEventListener('click', async () => {
+        const out = document.getElementById('output');
+        try { await navigator.clipboard.writeText(out.value); } catch (e) { out.select(); document.execCommand('copy'); }
+        document.getElementById('copied').textContent = 'הועתק ✓';
+        setTimeout(() => document.getElementById('copied').textContent = '', 2000);
+    });
+
+    renderWorkers();
+    loadExisting();
+</script>
+</body>
+</html>

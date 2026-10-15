@@ -12,6 +12,7 @@
 ```
 leonid-app/
 ├── index.html                        ← הקובץ הראשי
+├── shiftgen.html                     ← מחולל סידור עבודה חודשי
 ├── scripts/
 │   ├── fetch_bhbasket.py             ← משחקים מ-bhbasket.co.il
 │   ├── fetch_shiddurim.py            ← שידורי טלוויזיה מטלגרם (@Shiddurim, @sidorim)
@@ -21,10 +22,12 @@ leonid-app/
 ```
 
 ## 📋 עדכון סידור עבודה חודשי:
+**הדרך הקלה:** פתח את `shiftgen.html` (באתר האפליקציה), לחץ "צור סידור", תקן ימים לפי הצורך, והעתק את הקוד שנוצר. ואז:
+
 1. פתח את `index.html` ב-GitHub
 2. לחץ על ✏️ (Edit)
 3. חפש את `workSchedule`
-4. עדכן את התאריכים והשמות
+4. הדבק את הקוד (או עדכן את התאריכים והשמות ידנית)
 5. לחץ "Commit changes"
 
 ## 🏀 כדורסל:
